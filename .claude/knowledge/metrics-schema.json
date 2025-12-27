@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Acrobatics Metrics Schema",
+  "description": "Unified schema for tracking all agent and client metrics",
+  "version": "1.0.0",
+
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "metric_value": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "number" },
+        "timestamp": { "$ref": "#/definitions/timestamp" },
+        "source": { "type": "string" }
+      },
+      "required": ["value", "timestamp"]
+    },
+
+    "trend": {
+      "type": "object",
+      "properties": {
+        "direction": { "enum": ["up", "down", "stable"] },
+        "change_percent": { "type": "number" },
+        "period": { "type": "string" }
+      }
+    }
+  },
+
+  "properties": {
+    "agent_metrics": {
+      "type": "object",
+      "description": "Metrics for each AI agent",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "agent_id": { "type": "string" },
+          "tasks_completed": { "type": "integer", "minimum": 0 },
+          "avg_completion_time_ms": { "type": "number" },
+          "qc_scores": {
+            "type": "object",
+            "properties": {
+              "average": { "type": "number", "minimum": 0, "maximum": 10 },
+              "min": { "type": "number" },
+              "max": { "type": "number" },
+              "count": { "type": "integer" }
+            }
+          },
+          "first_pass_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "revision_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "error_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "last_active": { "$ref": "#/definitions/timestamp" },
+          "trend": { "$ref": "#/definitions/trend" }
+        }
+      }
+    },
+
+    "client_metrics": {
+      "type": "object",
+      "description": "Metrics per client",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "client_id": { "type": "string" },
+          "deliverables": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "this_month": { "type": "integer" },
+              "by_type": {
+                "type": "object",
+                "additionalProperties": { "type": "integer" }
+              }
+            }
+          },
+          "projects": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "active": { "type": "integer" },
+              "completed": { "type": "integer" }
+            }
+          },
+          "quality": {
+            "type": "object",
+            "properties": {
+              "avg_qc_score": { "type": "number" },
+              "on_time_rate": { "type": "number" },
+              "revision_requests": { "type": "integer" }
+            }
+          },
+          "engagement": {
+            "type": "object",
+            "properties": {
+              "consultations": { "type": "integer" },
+              "last_interaction": { "$ref": "#/definitions/timestamp" },
+              "satisfaction_score": { "type": "number", "minimum": 1, "maximum": 5 }
+            }
+          }
+        }
+      }
+    },
+
+    "pipeline_metrics": {
+      "type": "object",
+      "description": "Pipeline execution metrics",
+      "properties": {
+        "total_executions": { "type": "integer" },
+        "success_rate": { "type": "number" },
+        "avg_duration_ms": { "type": "number" },
+        "by_type": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer" },
+              "avg_duration_ms": { "type": "number" },
+              "success_rate": { "type": "number" }
+            }
+          }
+        },
+        "stage_metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "avg_duration_ms": { "type": "number" },
+              "failure_rate": { "type": "number" },
+              "retry_rate": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+
+    "qc_metrics": {
+      "type": "object",
+      "description": "Quality control metrics",
+      "properties": {
+        "total_reviews": { "type": "integer" },
+        "pass_rate": { "type": "number" },
+        "avg_score": { "type": "number" },
+        "by_verdict": {
+          "type": "object",
+          "properties": {
+            "pass": { "type": "integer" },
+            "pass_with_notes": { "type": "integer" },
+            "revise": { "type": "integer" },
+            "fail": { "type": "integer" }
+          }
+        },
+        "common_issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue": { "type": "string" },
+              "count": { "type": "integer" },
+              "severity": { "enum": ["low", "medium", "high"] }
+            }
+          }
+        }
+      }
+    },
+
+    "system_metrics": {
+      "type": "object",
+      "description": "System-level metrics",
+      "properties": {
+        "memory": {
+          "type": "object",
+          "properties": {
+            "total_entries": { "type": "integer" },
+            "namespaces": { "type": "integer" },
+            "cache_hit_rate": { "type": "number" },
+            "storage_bytes": { "type": "integer" }
+          }
+        },
+        "swarm": {
+          "type": "object",
+          "properties": {
+            "total_swarms": { "type": "integer" },
+            "active_swarms": { "type": "integer" },
+            "avg_agents_per_swarm": { "type": "number" },
+            "completion_rate": { "type": "number" }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "avg_response_time_ms": { "type": "number" },
+            "p95_response_time_ms": { "type": "number" },
+            "error_rate": { "type": "number" }
+          }
+        }
+      }
+    },
+
+    "time_series": {
+      "type": "object",
+      "description": "Time-series data for trending",
+      "properties": {
+        "metric_name": { "type": "string" },
+        "granularity": { "enum": ["hourly", "daily", "weekly", "monthly"] },
+        "data_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "$ref": "#/definitions/timestamp" },
+              "value": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "memory_keys": {
+    "description": "Standard memory keys for metrics storage",
+    "agent_metrics": "metrics/agent-{agent_id}",
+    "client_metrics": "metrics/client-{client_id}",
+    "pipeline_metrics": "metrics/pipeline-{pipeline_id}",
+    "qc_metrics": "metrics/qc-{date}",
+    "system_metrics": "metrics/system-{component}",
+    "daily_summary": "metrics/daily-{date}",
+    "weekly_summary": "metrics/weekly-{week}",
+    "goals": "metrics/goals",
+    "alerts": "metrics/alerts-active"
+  }
+}

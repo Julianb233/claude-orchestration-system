@@ -1,0 +1,273 @@
+{
+  "version": "2.0",
+  "description": "Bubba's enhanced learning, performance, and orchestration configuration",
+
+  "memory": {
+    "namespace": "bubba-learning",
+    "ttl": {
+      "orchestrationHistory": 7776000,
+      "taskPatterns": 7776000,
+      "agentPerformance": 7776000,
+      "blockerLibrary": 7776000,
+      "optimizationSuggestions": 604800,
+      "circuitBreakerState": 3600,
+      "loadBalancerState": 1800,
+      "estimationCache": 86400
+    }
+  },
+
+  "learning": {
+    "enabled": true,
+    "minSamplesForPattern": 3,
+    "similarityThreshold": 0.7,
+    "performanceWindow": 30,
+    "adaptiveWeighting": true,
+    "recentBias": 0.7,
+    "decayFactor": 0.95
+  },
+
+  "taskPatterns": {
+    "categories": [
+      "feature-implementation",
+      "bug-fix",
+      "refactoring",
+      "api-development",
+      "frontend-ui",
+      "database-schema",
+      "testing",
+      "deployment",
+      "documentation",
+      "security-audit",
+      "content-creation",
+      "client-deliverable",
+      "infrastructure",
+      "integration"
+    ],
+    "keywords": {
+      "feature-implementation": ["build", "create", "implement", "add", "new feature"],
+      "bug-fix": ["fix", "bug", "issue", "broken", "error", "not working"],
+      "refactoring": ["refactor", "clean up", "improve", "optimize", "restructure"],
+      "api-development": ["api", "endpoint", "rest", "graphql", "trpc"],
+      "frontend-ui": ["ui", "frontend", "component", "page", "layout", "design"],
+      "database-schema": ["database", "schema", "migration", "model", "table"],
+      "testing": ["test", "tests", "coverage", "spec", "e2e"],
+      "deployment": ["deploy", "production", "release", "publish"],
+      "documentation": ["docs", "readme", "documentation", "guide"],
+      "security-audit": ["security", "audit", "vulnerability", "penetration"],
+      "content-creation": ["script", "content", "video", "social", "marketing", "webinar"],
+      "client-deliverable": ["client", "deliverable", "portal", "for client"],
+      "infrastructure": ["infra", "terraform", "kubernetes", "docker", "server"],
+      "integration": ["integrate", "connect", "webhook", "sync", "mcp"]
+    },
+    "complexityMultipliers": {
+      "feature-implementation": 1.5,
+      "bug-fix": 1.0,
+      "refactoring": 1.3,
+      "api-development": 1.4,
+      "frontend-ui": 1.2,
+      "database-schema": 1.6,
+      "testing": 1.1,
+      "deployment": 1.8,
+      "documentation": 0.8,
+      "security-audit": 2.0,
+      "content-creation": 1.0,
+      "client-deliverable": 1.2,
+      "infrastructure": 2.0,
+      "integration": 1.5
+    }
+  },
+
+  "agentMetrics": {
+    "track": [
+      "tasksCompleted",
+      "tasksFailed",
+      "avgCompletionTime",
+      "blockerFrequency",
+      "qualityGatePassRate",
+      "reliabilityScore",
+      "speedScore",
+      "lastActiveTime",
+      "concurrentTasks"
+    ],
+    "agentTypes": [
+      "Tyler-TypeScript",
+      "Peter-Python",
+      "Fiona-Frontend",
+      "Adam-API",
+      "Dana-Database",
+      "Tessa-Tester",
+      "Rex-Reviewer",
+      "Sage-Security",
+      "Petra-DevOps",
+      "Archie-Architect",
+      "Diana-Debugger",
+      "Gina-Guide",
+      "Scarlett-Script",
+      "Morgan-Marketing",
+      "Sophie-Social",
+      "Kirk-Kubernetes",
+      "Derek-Deliverables",
+      "Otto-Observer"
+    ],
+    "maxConcurrentPerAgent": 2,
+    "cooldownAfterFailure": 300
+  },
+
+  "circuitBreaker": {
+    "enabled": true,
+    "failureThreshold": 3,
+    "successThreshold": 2,
+    "timeout": 60000,
+    "halfOpenRequests": 1,
+    "states": ["closed", "open", "half-open"],
+    "recoveryStrategy": "exponential",
+    "maxRetries": 3,
+    "baseDelay": 1000
+  },
+
+  "loadBalancer": {
+    "enabled": true,
+    "strategy": "weighted-round-robin",
+    "healthCheckInterval": 30000,
+    "weightFactors": {
+      "reliability": 0.4,
+      "speed": 0.3,
+      "availability": 0.3
+    },
+    "overloadThreshold": 0.8,
+    "redistributeOnFailure": true
+  },
+
+  "estimation": {
+    "enabled": true,
+    "baseTimePerTask": {
+      "feature-implementation": 1800,
+      "bug-fix": 900,
+      "refactoring": 1200,
+      "api-development": 1500,
+      "frontend-ui": 1200,
+      "database-schema": 1800,
+      "testing": 900,
+      "deployment": 600,
+      "documentation": 600,
+      "security-audit": 2400,
+      "content-creation": 1200,
+      "client-deliverable": 1500,
+      "infrastructure": 2400,
+      "integration": 1800
+    },
+    "agentSpeedMultipliers": {},
+    "confidenceThreshold": 0.7,
+    "bufferPercentage": 20
+  },
+
+  "contextManagement": {
+    "enabled": true,
+    "maxContextTokens": 180000,
+    "warningThreshold": 0.7,
+    "criticalThreshold": 0.85,
+    "autoCompactionTrigger": 0.8,
+    "checkpointInterval": 1800,
+    "handoffStrategy": "graceful",
+    "preserveKeys": ["activeTask", "progress", "blockers", "agents", "phases"]
+  },
+
+  "heartbeat": {
+    "enabled": true,
+    "interval": 30000,
+    "stallThreshold": 120000,
+    "recoveryActions": ["ping", "status-check", "restart", "escalate"],
+    "escalationEmail": "julian@aiacrobatics.com"
+  },
+
+  "dashboard": {
+    "enabled": true,
+    "syncInterval": 15000,
+    "notionDatabaseIds": {
+      "agentActivity": "2d1c283b-4ad9-8151-a460-eeaeb134b95c",
+      "metrics": "2d1c283b-4ad9-817f-a81a-e804de94bf6d",
+      "alerts": "2d1c283b-4ad9-81a8-baf9-dcd77e5c85c3"
+    },
+    "pushEvents": [
+      "swarm_started",
+      "phase_completed",
+      "agent_spawned",
+      "blocker_hit",
+      "swarm_completed",
+      "critical_error"
+    ]
+  },
+
+  "proactiveBlockerDetection": {
+    "enabled": true,
+    "preflightChecks": [
+      "dependencies",
+      "environment",
+      "permissions",
+      "diskSpace",
+      "networkConnectivity",
+      "apiCredentials"
+    ],
+    "commonBlockers": {
+      "dependency-missing": ["npm install", "pnpm install", "pip install"],
+      "env-missing": ["check .env", "load environment"],
+      "permissions": ["chmod", "sudo", "check access"],
+      "build-cache": ["clean cache", "rm -rf node_modules"]
+    }
+  },
+
+  "strategicAdvisors": {
+    "enabled": true,
+    "consultOn": [
+      "marketing-strategy",
+      "pricing-decision",
+      "funnel-design",
+      "offer-creation",
+      "time-optimization"
+    ],
+    "advisors": {
+      "russell-brunson": ["funnel", "webinar", "offer", "marketing"],
+      "alex-hormozi": ["pricing", "offer", "value", "acquisition"],
+      "dan-martell": ["time", "automation", "delegation", "scale"],
+      "sterling-sixsigma": ["process", "quality", "efficiency", "optimization"]
+    }
+  },
+
+  "blockerCategories": [
+    "dependency-missing",
+    "type-error",
+    "test-failure",
+    "build-error",
+    "api-timeout",
+    "auth-issue",
+    "config-missing",
+    "resource-limit",
+    "external-service",
+    "rate-limit",
+    "context-overflow",
+    "agent-failure"
+  ],
+
+  "optimizations": {
+    "autoSuggest": true,
+    "suggestThreshold": 0.8,
+    "maxSuggestions": 5,
+    "parallelizationOpportunity": true,
+    "agentReuse": true,
+    "batchSimilarTasks": true,
+    "cacheDecompositions": true
+  },
+
+  "qualityGates": {
+    "enabled": true,
+    "gates": {
+      "preflight": {"required": true, "blocking": true},
+      "post-api": {"required": true, "blocking": true},
+      "post-frontend": {"required": true, "blocking": false},
+      "pre-review": {"required": true, "blocking": true},
+      "pre-deploy": {"required": true, "blocking": true}
+    },
+    "autoRollback": true,
+    "maxRollbacks": 2
+  }
+}

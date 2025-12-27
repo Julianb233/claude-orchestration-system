@@ -1,0 +1,236 @@
+{
+  "version": "1.0",
+  "name": "Swarm Consensus Mechanisms",
+  "description": "Protocols for achieving agreement among agents in distributed decision-making",
+  "lastUpdated": null,
+
+  "protocols": {
+    "simple_majority": {
+      "name": "Simple Majority Vote",
+      "description": "More than 50% must agree",
+      "quorum": 0.5,
+      "threshold": 0.51,
+      "timeout": 60,
+      "useWhen": ["preference decisions", "non-critical choices", "task prioritization"],
+      "process": [
+        "Propose decision to all agents",
+        "Collect votes within timeout",
+        "If quorum met and threshold reached, decision approved",
+        "Otherwise, escalate or retry"
+      ]
+    },
+    "supermajority": {
+      "name": "Supermajority Vote",
+      "description": "Two-thirds must agree",
+      "quorum": 0.67,
+      "threshold": 0.67,
+      "timeout": 120,
+      "useWhen": ["architectural decisions", "breaking changes", "security policies"],
+      "process": [
+        "Propose with detailed rationale",
+        "Allow discussion period",
+        "Collect votes with reasoning",
+        "Require 2/3 agreement for approval"
+      ]
+    },
+    "unanimous": {
+      "name": "Unanimous Consent",
+      "description": "All agents must agree",
+      "quorum": 1.0,
+      "threshold": 1.0,
+      "timeout": 300,
+      "useWhen": ["production deployments", "security-critical changes", "data deletion"],
+      "process": [
+        "Propose with full impact analysis",
+        "Each agent must explicitly approve",
+        "Single rejection blocks the proposal",
+        "Blocked proposals require revision"
+      ]
+    },
+    "expert_weighted": {
+      "name": "Expert-Weighted Vote",
+      "description": "Domain experts have higher vote weight",
+      "quorum": 0.5,
+      "threshold": 0.6,
+      "expertWeight": 3.0,
+      "timeout": 90,
+      "useWhen": ["technical decisions", "specialized domains", "complex trade-offs"],
+      "process": [
+        "Identify relevant domain experts",
+        "Expert votes count 3x normal",
+        "Calculate weighted vote total",
+        "Experts can veto with explanation"
+      ]
+    },
+    "leader_approval": {
+      "name": "Leader Approval",
+      "description": "Coordinator has final say after consultation",
+      "quorum": 0.3,
+      "timeout": 60,
+      "useWhen": ["urgent decisions", "hierarchical mode", "conflicting opinions"],
+      "process": [
+        "Collect input from all agents",
+        "Present options to coordinator",
+        "Coordinator makes final decision",
+        "Decision broadcast to all agents"
+      ]
+    },
+    "lazy_consensus": {
+      "name": "Lazy Consensus",
+      "description": "Approved unless explicitly blocked",
+      "objectionPeriod": 300,
+      "minObjections": 1,
+      "useWhen": ["low-risk changes", "routine operations", "mesh topology"],
+      "process": [
+        "Announce intent with details",
+        "Wait for objection period",
+        "If no objections, proceed",
+        "Single objection triggers discussion"
+      ]
+    },
+    "raft": {
+      "name": "Raft Consensus",
+      "description": "Leader-based log replication for state consistency",
+      "heartbeatInterval": 50,
+      "electionTimeout": [150, 300],
+      "useWhen": ["distributed state", "log replication", "fault tolerance"],
+      "process": [
+        "Leader sends append entries",
+        "Followers acknowledge",
+        "Once majority acknowledges, commit",
+        "If leader fails, elect new leader"
+      ]
+    }
+  },
+
+  "proposalLifecycle": {
+    "states": ["draft", "proposed", "voting", "discussion", "approved", "rejected", "expired"],
+    "transitions": {
+      "draft_to_proposed": {
+        "action": "submit",
+        "requirements": ["author", "description", "protocol"]
+      },
+      "proposed_to_voting": {
+        "action": "start_vote",
+        "requirements": ["quorum_possible"]
+      },
+      "voting_to_approved": {
+        "condition": "threshold_met"
+      },
+      "voting_to_rejected": {
+        "condition": "threshold_impossible"
+      },
+      "voting_to_discussion": {
+        "condition": "objection_raised"
+      },
+      "discussion_to_voting": {
+        "action": "revote",
+        "requirements": ["discussion_resolved"]
+      },
+      "any_to_expired": {
+        "condition": "timeout_reached"
+      }
+    }
+  },
+
+  "voting": {
+    "options": ["approve", "reject", "abstain", "need_more_info"],
+    "requirements": {
+      "justification": {
+        "approve": "optional",
+        "reject": "required",
+        "abstain": "optional",
+        "need_more_info": "required"
+      }
+    },
+    "changeVote": {
+      "allowed": true,
+      "untilState": "voting"
+    }
+  },
+
+  "conflictResolution": {
+    "strategies": [
+      {
+        "name": "capability_priority",
+        "description": "Agent with most relevant capability wins",
+        "apply": "When domain expertise matters",
+        "implementation": "Compare capability scores, highest wins"
+      },
+      {
+        "name": "recency_priority",
+        "description": "Most recent data/analysis takes precedence",
+        "apply": "When information freshness matters",
+        "implementation": "Compare timestamps, newer wins"
+      },
+      {
+        "name": "merge_outputs",
+        "description": "Combine non-conflicting parts of each position",
+        "apply": "When outputs are complementary",
+        "implementation": "Identify common ground, merge differences"
+      },
+      {
+        "name": "escalate",
+        "description": "Escalate to coordinator or user",
+        "apply": "When automatic resolution fails",
+        "implementation": "Present options with pros/cons"
+      },
+      {
+        "name": "random_tiebreak",
+        "description": "Random selection when all else equal",
+        "apply": "When positions are equivalent",
+        "implementation": "Cryptographically secure random choice"
+      }
+    ],
+    "defaultStrategy": "capability_priority",
+    "escalationThreshold": 3
+  },
+
+  "leaderElection": {
+    "triggers": ["swarm_start", "leader_failure", "leader_resignation", "topology_change"],
+    "algorithm": "raft_election",
+    "criteria": [
+      {"name": "capability_score", "weight": 0.3},
+      {"name": "tasks_completed", "weight": 0.2},
+      {"name": "success_rate", "weight": 0.3},
+      {"name": "availability", "weight": 0.2}
+    ],
+    "term_duration": 3600,
+    "maxTerms": 0
+  },
+
+  "memoryNamespaces": {
+    "proposals": {
+      "path": "consensus/proposals",
+      "ttl": 86400
+    },
+    "votes": {
+      "path": "consensus/votes",
+      "ttl": 86400
+    },
+    "decisions": {
+      "path": "consensus/decisions",
+      "ttl": 604800
+    },
+    "elections": {
+      "path": "consensus/elections",
+      "ttl": 86400
+    }
+  },
+
+  "auditLog": {
+    "enabled": true,
+    "events": [
+      "proposal_created",
+      "vote_cast",
+      "vote_changed",
+      "proposal_approved",
+      "proposal_rejected",
+      "conflict_resolved",
+      "leader_elected",
+      "leader_resigned"
+    ],
+    "retention": 2592000,
+    "namespace": "audit/consensus"
+  }
+}

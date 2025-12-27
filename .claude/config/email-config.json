@@ -1,0 +1,30 @@
+{
+  "service": "mailgun",
+  "domain": "aiacrobatics.com",
+  "defaultRecipient": "julian@aiacrobatics.com",
+  "sender": "bubba@aiacrobatics.com",
+  "senderName": "Bubba Orchestrator",
+  "credentialKey": "Mailgun API key",
+  "templates": {
+    "swarm_started": {
+      "subject": "[Bubba] Started: {{task_name}}",
+      "body": "Hey Julian,\n\nI'm on it. Here's the plan:\n\n{{plan_summary}}\n\nAgents deployed:\n{{agents}}\n\nPhases:\n{{phases}}\n\nI'll email you when it's done.\n\n- Bubba"
+    },
+    "swarm_completed": {
+      "subject": "[Bubba] Completed: {{task_name}}",
+      "body": "Hey Julian,\n\nAll done!\n\nResults:\n{{summary}}\n\nTime taken: {{duration}}\n\nFiles changed:\n{{files}}\n\nAgents used: {{agents}}\n\nLet me know if you need anything else.\n\n- Bubba"
+    },
+    "critical_error": {
+      "subject": "[Bubba] ALERT: {{error_type}}",
+      "body": "Hey Julian,\n\nHit a snag:\n\nError: {{error_message}}\n\nAgent: {{agent}}\n\nContext:\n{{context}}\n\nRecovery options:\n{{recovery_options}}\n\nNeed your input on this one.\n\n- Bubba"
+    },
+    "blocker": {
+      "subject": "[Bubba] Blocked: {{task_name}}",
+      "body": "Hey Julian,\n\nWe're stuck:\n\nBlocker: {{blocker_description}}\n\nWaiting on: {{dependency}}\n\nAffected agents:\n{{affected_agents}}\n\nI'll keep trying, but wanted you to know.\n\n- Bubba"
+    },
+    "progress_update": {
+      "subject": "[Bubba] Progress: {{task_name}}",
+      "body": "Hey Julian,\n\nQuick update:\n\nCompleted:\n{{completed}}\n\nIn progress:\n{{in_progress}}\n\nUp next:\n{{next_up}}\n\nEverything on track.\n\n- Bubba"
+    }
+  }
+}

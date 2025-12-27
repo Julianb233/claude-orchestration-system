@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Deliverables Portal</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <h1>Client Deliverables</h1>
+        <p class="subtitle">AI-Powered Content Delivery</p>
+    </header>
+
+    <main>
+        <section class="search-bar">
+            <input type="text" id="search" placeholder="Search clients or deliverables...">
+        </section>
+
+        <section class="clients-grid" id="clients-grid">
+            {{CLIENTS_GRID}}
+        </section>
+
+        <section class="recent-deliverables">
+            <h2>Recent Deliverables</h2>
+            <div id="recent-feed">
+                {{RECENT_FEED}}
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Powered by AI Acrobatics Orchestra</p>
+        <p class="updated">Last updated: <span id="last-updated">{{LAST_UPDATED}}</span></p>
+    </footer>
+
+    <script>
+        document.getElementById('search').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.client-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

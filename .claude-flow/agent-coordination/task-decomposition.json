@@ -1,0 +1,288 @@
+{
+  "version": "1.0",
+  "name": "Intelligent Task Decomposition System",
+  "description": "Rules and patterns for breaking complex tasks into agent-executable subtasks",
+  "lastUpdated": null,
+
+  "decompositionStrategies": {
+    "functional": {
+      "description": "Decompose by functional area (frontend, backend, database)",
+      "useWhen": ["full-stack features", "new feature implementation"],
+      "outputPattern": "parallel tasks by domain"
+    },
+    "sequential": {
+      "description": "Decompose into ordered steps with dependencies",
+      "useWhen": ["migrations", "deployments", "data transformations"],
+      "outputPattern": "chain of dependent tasks"
+    },
+    "layered": {
+      "description": "Decompose by architectural layer",
+      "useWhen": ["api development", "service implementation"],
+      "outputPattern": "bottom-up or top-down task chain"
+    },
+    "exploratory": {
+      "description": "Start with research, then derive implementation tasks",
+      "useWhen": ["unknown technology", "bug investigation", "optimization"],
+      "outputPattern": "research phase then implementation phase"
+    },
+    "iterative": {
+      "description": "Multiple passes refining the same work",
+      "useWhen": ["refactoring", "optimization", "code review"],
+      "outputPattern": "cycles of analysis and improvement"
+    }
+  },
+
+  "taskPatterns": {
+    "implement_feature": {
+      "strategy": "functional",
+      "phases": [
+        {
+          "name": "analysis",
+          "tasks": [
+            {"type": "research", "description": "Understand requirements and existing code"},
+            {"type": "design", "description": "Plan implementation approach"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "implementation",
+          "tasks": [
+            {"type": "database", "description": "Schema changes and migrations", "optional": true},
+            {"type": "backend", "description": "API endpoints and business logic"},
+            {"type": "frontend", "description": "UI components and integration"}
+          ],
+          "parallelizable": "partial",
+          "dependencies": ["database -> backend -> frontend"]
+        },
+        {
+          "name": "validation",
+          "tasks": [
+            {"type": "testing", "description": "Write and run tests"},
+            {"type": "review", "description": "Code review and quality checks"}
+          ],
+          "parallelizable": true
+        }
+      ]
+    },
+    "fix_bug": {
+      "strategy": "exploratory",
+      "phases": [
+        {
+          "name": "investigation",
+          "tasks": [
+            {"type": "reproduce", "description": "Reproduce the bug"},
+            {"type": "analyze", "description": "Find root cause"},
+            {"type": "scope", "description": "Identify affected areas"}
+          ],
+          "parallelizable": false
+        },
+        {
+          "name": "fix",
+          "tasks": [
+            {"type": "implement", "description": "Implement the fix"},
+            {"type": "test", "description": "Verify fix works"},
+            {"type": "regression", "description": "Check for regressions"}
+          ],
+          "parallelizable": false
+        }
+      ]
+    },
+    "refactor_code": {
+      "strategy": "iterative",
+      "phases": [
+        {
+          "name": "assessment",
+          "tasks": [
+            {"type": "analyze", "description": "Identify code smells and issues"},
+            {"type": "plan", "description": "Create refactoring plan"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "refactor",
+          "tasks": [
+            {"type": "extract", "description": "Extract methods/classes"},
+            {"type": "rename", "description": "Improve naming"},
+            {"type": "simplify", "description": "Reduce complexity"}
+          ],
+          "parallelizable": "partial"
+        },
+        {
+          "name": "validate",
+          "tasks": [
+            {"type": "test", "description": "Ensure tests still pass"},
+            {"type": "review", "description": "Review refactored code"}
+          ],
+          "parallelizable": true
+        }
+      ]
+    },
+    "deploy_system": {
+      "strategy": "sequential",
+      "phases": [
+        {
+          "name": "preparation",
+          "tasks": [
+            {"type": "backup", "description": "Create backups"},
+            {"type": "check", "description": "Pre-deployment checks"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "deployment",
+          "tasks": [
+            {"type": "deploy", "description": "Deploy application"},
+            {"type": "migrate", "description": "Run migrations", "optional": true}
+          ],
+          "parallelizable": false
+        },
+        {
+          "name": "verification",
+          "tasks": [
+            {"type": "smoke-test", "description": "Run smoke tests"},
+            {"type": "monitor", "description": "Monitor for issues"}
+          ],
+          "parallelizable": true
+        }
+      ]
+    },
+    "security_audit": {
+      "strategy": "layered",
+      "phases": [
+        {
+          "name": "static_analysis",
+          "tasks": [
+            {"type": "code-scan", "description": "Static code analysis"},
+            {"type": "dependency-check", "description": "Check for vulnerable dependencies"},
+            {"type": "secrets-scan", "description": "Check for exposed secrets"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "dynamic_analysis",
+          "tasks": [
+            {"type": "auth-test", "description": "Test authentication/authorization"},
+            {"type": "injection-test", "description": "Test for injection vulnerabilities"},
+            {"type": "api-test", "description": "Test API security"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "reporting",
+          "tasks": [
+            {"type": "findings", "description": "Document findings"},
+            {"type": "remediation", "description": "Create remediation plan"}
+          ],
+          "parallelizable": false
+        }
+      ]
+    },
+    "create_documentation": {
+      "strategy": "functional",
+      "phases": [
+        {
+          "name": "discovery",
+          "tasks": [
+            {"type": "code-analysis", "description": "Analyze code structure"},
+            {"type": "api-extraction", "description": "Extract API signatures"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "writing",
+          "tasks": [
+            {"type": "api-docs", "description": "Write API documentation"},
+            {"type": "guides", "description": "Write usage guides"},
+            {"type": "examples", "description": "Create code examples"}
+          ],
+          "parallelizable": true
+        },
+        {
+          "name": "review",
+          "tasks": [
+            {"type": "technical-review", "description": "Review for accuracy"},
+            {"type": "editorial-review", "description": "Review for clarity"}
+          ],
+          "parallelizable": true
+        }
+      ]
+    }
+  },
+
+  "complexityEstimation": {
+    "factors": {
+      "filesAffected": {
+        "weight": 2.0,
+        "thresholds": {"low": 3, "medium": 10, "high": 25}
+      },
+      "dependencyCount": {
+        "weight": 1.5,
+        "thresholds": {"low": 2, "medium": 5, "high": 10}
+      },
+      "riskLevel": {
+        "weight": 2.5,
+        "thresholds": {"low": 1, "medium": 2, "high": 3}
+      },
+      "unknownFactors": {
+        "weight": 3.0,
+        "thresholds": {"low": 0, "medium": 1, "high": 3}
+      }
+    },
+    "complexityLevels": {
+      "trivial": {"maxScore": 5, "maxAgents": 1, "estimatedTime": "minutes"},
+      "simple": {"maxScore": 15, "maxAgents": 2, "estimatedTime": "hours"},
+      "moderate": {"maxScore": 30, "maxAgents": 4, "estimatedTime": "day"},
+      "complex": {"maxScore": 50, "maxAgents": 6, "estimatedTime": "days"},
+      "epic": {"maxScore": 100, "maxAgents": 10, "estimatedTime": "weeks"}
+    }
+  },
+
+  "decompositionRules": [
+    {
+      "name": "single_responsibility",
+      "description": "Each subtask should do one thing well",
+      "enforcement": "strict"
+    },
+    {
+      "name": "clear_boundaries",
+      "description": "Subtasks should have clear inputs and outputs",
+      "enforcement": "strict"
+    },
+    {
+      "name": "testable_outputs",
+      "description": "Each subtask should produce verifiable results",
+      "enforcement": "recommended"
+    },
+    {
+      "name": "minimize_dependencies",
+      "description": "Prefer parallel tasks over sequential when possible",
+      "enforcement": "recommended"
+    },
+    {
+      "name": "appropriate_granularity",
+      "description": "Tasks should be neither too large nor too small",
+      "enforcement": "recommended",
+      "guidelines": {
+        "minDuration": "5 minutes",
+        "maxDuration": "2 hours",
+        "idealDuration": "30-60 minutes"
+      }
+    }
+  ],
+
+  "outputFormat": {
+    "task": {
+      "id": "string",
+      "type": "string",
+      "description": "string",
+      "assignedAgent": "string|null",
+      "priority": "critical|high|normal|low",
+      "dependencies": ["taskId"],
+      "inputs": ["description of inputs"],
+      "outputs": ["description of expected outputs"],
+      "acceptanceCriteria": ["criteria"],
+      "estimatedComplexity": "trivial|simple|moderate|complex",
+      "status": "pending|assigned|in_progress|blocked|completed|failed"
+    }
+  }
+}

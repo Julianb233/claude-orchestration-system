@@ -1,0 +1,120 @@
+{
+  "name": "Dashboard Data Aggregator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 1 }]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "id": "schedule-trigger",
+      "name": "Hourly Trigger"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.METRICS_API_URL }}/stats"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 200],
+      "id": "fetch-stats",
+      "name": "Fetch Stats"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.METRICS_API_URL }}/users"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 400],
+      "id": "fetch-users",
+      "name": "Fetch Users"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "id": "merge-data",
+      "name": "Merge Data"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            { "id": "1", "name": "timestamp", "value": "={{ DateTime.now().toISO() }}", "type": "string" },
+            { "id": "2", "name": "stats", "value": "={{ $('Fetch Stats').item.json }}", "type": "object" },
+            { "id": "3", "name": "users", "value": "={{ $('Fetch Users').item.json }}", "type": "object" },
+            { "id": "4", "name": "totalUsers", "value": "={{ $('Fetch Users').item.json.length }}", "type": "number" }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [850, 300],
+      "id": "format-dashboard",
+      "name": "Format Dashboard Data"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "={{ $env.GOOGLE_SHEETS_DOC_ID }}",
+        "sheetName": "Dashboard Metrics",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "total_users": "={{ $json.totalUsers }}",
+            "stats_json": "={{ JSON.stringify($json.stats) }}"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1050, 300],
+      "id": "save-to-sheets",
+      "name": "Save to Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_CREDENTIALS_ID",
+          "name": "Google Sheets"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Hourly Trigger": {
+      "main": [
+        [
+          { "node": "Fetch Stats", "type": "main", "index": 0 },
+          { "node": "Fetch Users", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch Stats": {
+      "main": [[{ "node": "Merge Data", "type": "main", "index": 0 }]]
+    },
+    "Fetch Users": {
+      "main": [[{ "node": "Merge Data", "type": "main", "index": 1 }]]
+    },
+    "Merge Data": {
+      "main": [[{ "node": "Format Dashboard Data", "type": "main", "index": 0 }]]
+    },
+    "Format Dashboard Data": {
+      "main": [[{ "node": "Save to Google Sheets", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

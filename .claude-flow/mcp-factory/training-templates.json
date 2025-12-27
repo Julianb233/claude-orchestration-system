@@ -1,0 +1,132 @@
+{
+  "version": "1.0",
+  "description": "Templates for training agents on MCP usage",
+  "templates": {
+    "github": {
+      "when_to_use": [
+        "Working with GitHub repositories",
+        "Creating/managing issues and PRs",
+        "Checking CI/CD status",
+        "Managing repository settings"
+      ],
+      "example_prompts": [
+        "Create an issue for this bug",
+        "List open PRs in the repo",
+        "Check the CI status",
+        "Get file contents from the repo"
+      ],
+      "tools": [
+        "mcp__github__create_issue",
+        "mcp__github__list_pull_requests",
+        "mcp__github__get_file_contents",
+        "mcp__github__create_pull_request"
+      ]
+    },
+    "notion": {
+      "when_to_use": [
+        "Searching for information in Notion",
+        "Creating or updating pages",
+        "Managing databases",
+        "Looking up credentials or notes"
+      ],
+      "example_prompts": [
+        "Find my API keys in Notion",
+        "Create a new page for this project",
+        "Search for client information",
+        "Update the project status"
+      ],
+      "tools": [
+        "mcp__notion__API-post-search",
+        "mcp__notion__API-post-page",
+        "mcp__notion__API-post-database-query"
+      ]
+    },
+    "stripe": {
+      "when_to_use": [
+        "Processing payments",
+        "Managing subscriptions",
+        "Checking payment status",
+        "Creating invoices"
+      ],
+      "example_prompts": [
+        "Create a payment intent",
+        "List recent charges",
+        "Get subscription details",
+        "Create an invoice"
+      ],
+      "common_endpoints": [
+        "/v1/payment_intents",
+        "/v1/charges",
+        "/v1/subscriptions",
+        "/v1/invoices"
+      ]
+    },
+    "linear": {
+      "when_to_use": [
+        "Managing project issues",
+        "Tracking sprint progress",
+        "Creating tickets",
+        "Assigning work"
+      ],
+      "example_prompts": [
+        "Create a Linear issue for this",
+        "What's in the current sprint?",
+        "Assign this to the team",
+        "Update issue status"
+      ],
+      "type": "graphql"
+    },
+    "slack": {
+      "when_to_use": [
+        "Sending notifications",
+        "Posting to channels",
+        "Managing channels",
+        "Looking up users"
+      ],
+      "example_prompts": [
+        "Post a message to #general",
+        "Send a deployment notification",
+        "List channel members",
+        "Create a new channel"
+      ]
+    },
+    "openai": {
+      "when_to_use": [
+        "Generating embeddings",
+        "Using GPT for specific tasks",
+        "Image generation with DALL-E",
+        "Fine-tuning models"
+      ],
+      "example_prompts": [
+        "Generate embeddings for this text",
+        "Create an image of...",
+        "Use GPT to summarize...",
+        "List available models"
+      ]
+    },
+    "generic": {
+      "when_to_use": [
+        "When interacting with {api_name} services",
+        "Making API calls to {api_name}",
+        "Managing {api_name} resources"
+      ],
+      "example_prompts": [
+        "Call the {api_name} API to...",
+        "Get data from {api_name}",
+        "Update {api_name} settings"
+      ],
+      "tools": [
+        "mcp__{api_name}__request"
+      ]
+    }
+  },
+  "skill_template": {
+    "name": "mcp-{api_name}",
+    "description": "Use {api_name} API via MCP for {use_cases}",
+    "triggers": [
+      "{api_name}",
+      "{common_actions}"
+    ],
+    "auto_invoke": false
+  }
+}

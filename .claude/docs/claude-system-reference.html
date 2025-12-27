@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julian's Claude System Reference</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0a0;
+            --accent: #e94560;
+            --accent-secondary: #533483;
+            --border: #2a2a4a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+        }
+
+        .light-mode {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-card: #e8e8e8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #d0d0d0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--bg-secondary);
+            padding: 30px 0;
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .search-container {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: var(--bg-card);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, var(--bg-card), var(--accent-secondary));
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .section-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .section.collapsed .section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .section.collapsed .section-content {
+            display: none;
+        }
+
+        .section-content {
+            padding: 20px;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.2);
+        }
+
+        .agent-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .agent-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .agent-tier {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tier-1 { background: var(--accent); color: white; }
+        .tier-2 { background: var(--accent-secondary); color: white; }
+        .tier-3 { background: #2563eb; color: white; }
+        .tier-4 { background: #059669; color: white; }
+
+        .agent-invoke {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-card);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        tr:hover {
+            background: var(--bg-card);
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-secondary);
+        }
+
+        code {
+            background: var(--bg-primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--success);
+        }
+
+        .mermaid {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .namespace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .namespace-card {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .namespace-name {
+            font-weight: 600;
+            color: var(--accent);
+            font-family: monospace;
+        }
+
+        .namespace-ttl {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .header-content { flex-direction: column; gap: 15px; }
+            .agent-grid { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            body { background: white; color: black; }
+            .theme-toggle, .search-container { display: none; }
+            .section.collapsed .section-content { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Julian's Claude System Reference</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">Toggle Light/Dark</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">20</div>
+                <div class="stat-label">Named Agents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">7</div>
+                <div class="stat-label">Workflow Files</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">90%</div>
+                <div class="stat-label">Context Reduction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">6.5K</div>
+                <div class="stat-label">CLAUDE.md Chars</div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search agents, commands, workflows..." oninput="filterContent(this.value)">
+        </div>
+
+        <!-- System Architecture -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">System Architecture</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="mermaid">
+graph TB
+    subgraph "Orchestrator Layer"
+        CLAUDE["CLAUDE.md<br/>(6.5K chars)"]
+    end
+
+    subgraph "Workflow Layer"
+        W1["session-startup.md"]
+        W2["state-management.md"]
+        W3["proactive-actions.md"]
+        W4["recovery-protocol.md"]
+        W5["history-tracking.md"]
+        W6["file-sync.md"]
+        W7["hive-coordination.md"]
+    end
+
+    subgraph "Agent Layer"
+        REG["_registry.md<br/>(20 Named Agents)"]
+        T1["Tier 1: Core"]
+        T2["Tier 2: Quality"]
+        T3["Tier 3: Specialized"]
+        T4["Tier 4: Business"]
+    end
+
+    subgraph "Memory Layer"
+        MEM["Claude Flow Memory"]
+        NS1["agent-status"]
+        NS2["file-locks"]
+        NS3["history"]
+        NS4["recovery"]
+    end
+
+    CLAUDE --> W1 & W2 & W3 & W4 & W5 & W6 & W7
+    CLAUDE --> REG
+    REG --> T1 & T2 & T3 & T4
+    T1 & T2 & T3 & T4 --> MEM
+    MEM --> NS1 & NS2 & NS3 & NS4
+                </div>
+            </div>
+        </div>
+
+        <!-- Named Agents Directory -->
+        <div class="section" id="agents-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">Named Agents Directory</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <h3 style="margin-bottom: 20px; color: var(--accent);">Tier 1: Core Development (Daily Use)</h3>
+                <div class="agent-grid">
+                    <div class="agent-card" data-search="marcus orchestrator coordination multi-agent">
+                        <div class="agent-name">Marcus-Orchestrator</div>
+                        <div class="agent-role">Multi-agent coordination</div>
+                        <span class="agent-tier tier-1">Tier 1 - Rank #1</span>
+                        <div class="agent-invoke">"Ask Marcus to coordinate..."</div>
+                    </div>
+                    <div class="agent-card" data-search="tyler typescript javascript ts js">
+                        <div class="agent-name">Tyler-TypeScript</div>
+                        <div class="agent-role">TS/JS development</div>
+                        <span class="agent-tier tier-1">Tier 1 - Rank #2</span>
+                        <div class="agent-invoke">"Have Tyler implement..."</div>
+                    </div>
+                    <div class="agent-card" data-search="rex reviewer code review">
+                        <div class="agent-name">Rex-Reviewer</div>
+                        <div class="agent-role">Code review</div>
+                        <span class="agent-tier tier-1">Tier 1 - Rank #3</span>
+                        <div class="agent-invoke">"Rex should review..."</div>
+                    </div>
+                    <div class="agent-card" data-search="diana debugger bug debug">
+                        <div class="agent-name">Diana-Debugger</div>
+                        <div class="agent-role">Bug investigation</div>
+                        <span class="agent-tier tier-1">Tier 1 - Rank #4</span>
+                        <div class="agent-invoke">"Diana, investigate..."</div>
+                    </div>
+                    <div class="agent-card" data-search="archie architect design system">
+                        <div class="agent-name">Archie-Architect</div>
+                        <div class="agent-role">System design</div>
+                        <span class="agent-tier tier-1">Tier 1 - Rank #5</span>
+                        <div class="agent-invoke">"Archie, design..."</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px; color: var(--accent-secondary);">Tier 2: Quality & Operations (High Use)</h3>
+                <div class="agent-grid">
+                    <div class="agent-card" data-search="tessa tester test testing">
+                        <div class="agent-name">Tessa-Tester</div>
+                        <div class="agent-role">Test automation</div>
+                        <span class="agent-tier tier-2">Tier 2 - Rank #6</span>
+                        <div class="agent-invoke">"Tessa, write tests..."</div>
+                    </div>
+                    <div class="agent-card" data-search="petra devops deploy deployment">
+                        <div class="agent-name">Petra-DevOps</div>
+                        <div class="agent-role">Deployment</div>
+                        <span class="agent-tier tier-2">Tier 2 - Rank #7</span>
+                        <div class="agent-invoke">"Petra, deploy..."</div>
+                    </div>
+                    <div class="agent-card" data-search="helena memory context history">
+                        <div class="agent-name">Helena-Memory</div>
+                        <div class="agent-role">Context/history</div>
+                        <span class="agent-tier tier-2">Tier 2 - Rank #8</span>
+                        <div class="agent-invoke">"Helena, what was I doing?"</div>
+                    </div>
+                    <div class="agent-card" data-search="sage security audit vulnerability">
+                        <div class="agent-name">Sage-Security</div>
+                        <div class="agent-role">Security audits</div>
+                        <span class="agent-tier tier-2">Tier 2 - Rank #9</span>
+                        <div class="agent-invoke">"Sage, scan for..."</div>
+                    </div>
+                    <div class="agent-card" data-search="otto observer monitoring observability">
+                        <div class="agent-name">Otto-Observer</div>
+                        <div class="agent-role">Monitoring</div>
+                        <span class="agent-tier tier-2">Tier 2 - Rank #10</span>
+                        <div class="agent-invoke">"Otto, set up monitoring..."</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px; color: #2563eb;">Tier 3: Specialized Development</h3>
+                <div class="agent-grid">
+                    <div class="agent-card" data-search="peter python backend">
+                        <div class="agent-name">Peter-Python</div>
+                        <div class="agent-role">Python development</div>
+                        <span class="agent-tier tier-3">Tier 3 - Rank #11</span>
+                        <div class="agent-invoke">"Peter, write in Python..."</div>
+                    </div>
+                    <div class="agent-card" data-search="dana database schema data">
+                        <div class="agent-name">Dana-Database</div>
+                        <div class="agent-role">Data modeling</div>
+                        <span class="agent-tier tier-3">Tier 3 - Rank #12</span>
+                        <div class="agent-invoke">"Dana, design schema..."</div>
+                    </div>
+                    <div class="agent-card" data-search="fiona frontend react ui">
+                        <div class="agent-name">Fiona-Frontend</div>
+                        <div class="agent-role">UI development</div>
+                        <span class="agent-tier tier-3">Tier 3 - Rank #13</span>
+                        <div class="agent-invoke">"Fiona, build component..."</div>
+                    </div>
+                    <div class="agent-card" data-search="adam api documentation">
+                        <div class="agent-name">Adam-API</div>
+                        <div class="agent-role">API documentation</div>
+                        <span class="agent-tier tier-3">Tier 3 - Rank #14</span>
+                        <div class="agent-invoke">"Adam, document API..."</div>
+                    </div>
+                    <div class="agent-card" data-search="kirk kubernetes k8s container">
+                        <div class="agent-name">Kirk-Kubernetes</div>
+                        <div class="agent-role">Container orchestration</div>
+                        <span class="agent-tier tier-3">Tier 3 - Rank #15</span>
+                        <div class="agent-invoke">"Kirk, set up K8s..."</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px; color: #059669;">Tier 4: Business & Content</h3>
+                <div class="agent-grid">
+                    <div class="agent-card" data-search="morgan marketing campaign">
+                        <div class="agent-name">Morgan-Marketing</div>
+                        <div class="agent-role">Campaigns</div>
+                        <span class="agent-tier tier-4">Tier 4 - Rank #16</span>
+                        <div class="agent-invoke">"Morgan, create campaign..."</div>
+                    </div>
+                    <div class="agent-card" data-search="sophie social media posts">
+                        <div class="agent-name">Sophie-Social</div>
+                        <div class="agent-role">Social content</div>
+                        <span class="agent-tier tier-4">Tier 4 - Rank #17</span>
+                        <div class="agent-invoke">"Sophie, write posts..."</div>
+                    </div>
+                    <div class="agent-card" data-search="scarlett script video">
+                        <div class="agent-name">Scarlett-Script</div>
+                        <div class="agent-role">Video scripts</div>
+                        <span class="agent-tier tier-4">Tier 4 - Rank #18</span>
+                        <div class="agent-invoke">"Scarlett, write script..."</div>
+                    </div>
+                    <div class="agent-card" data-search="gina guide documentation tutorial">
+                        <div class="agent-name">Gina-Guide</div>
+                        <div class="agent-role">Documentation</div>
+                        <span class="agent-tier tier-4">Tier 4 - Rank #19</span>
+                        <div class="agent-invoke">"Gina, create guide..."</div>
+                    </div>
+                    <div class="agent-card" data-search="bella branding brand identity">
+                        <div class="agent-name">Bella-Branding</div>
+                        <div class="agent-role">Brand consistency</div>
+                        <span class="agent-tier tier-4">Tier 4 - Rank #20</span>
+                        <div class="agent-invoke">"Bella, ensure brand..."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflows Reference -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">Workflows Reference</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Workflow File</th>
+                            <th>Purpose</th>
+                            <th>Auto-Trigger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-search="session startup recovery">
+                            <td><code>session-startup.md</code></td>
+                            <td>Session initialization, recovery check, welcome display</td>
+                            <td>Session start</td>
+                        </tr>
+                        <tr data-search="state management project">
+                            <td><code>state-management.md</code></td>
+                            <td>.claude-state.json rules, auto-save</td>
+                            <td>In project directory</td>
+                        </tr>
+                        <tr data-search="proactive actions anticipation">
+                            <td><code>proactive-actions.md</code></td>
+                            <td>Anticipation system, shortcuts, predictions</td>
+                            <td>After actions complete</td>
+                        </tr>
+                        <tr data-search="recovery protocol checkpoint">
+                            <td><code>recovery-protocol.md</code></td>
+                            <td>Checkpoints, agent recovery, multi-agent protection</td>
+                            <td>Multi-agent tasks</td>
+                        </tr>
+                        <tr data-search="history tracking save">
+                            <td><code>history-tracking.md</code></td>
+                            <td>Auto-save interactions, repo grouping</td>
+                            <td>Significant work</td>
+                        </tr>
+                        <tr data-search="file sync notification">
+                            <td><code>file-sync.md</code></td>
+                            <td>File relations, sync notifications</td>
+                            <td>File changes</td>
+                        </tr>
+                        <tr data-search="hive coordination multi-terminal">
+                            <td><code>hive-coordination.md</code></td>
+                            <td>Multi-terminal workers, task distribution</td>
+                            <td>/cf-hive-* commands</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Memory Namespaces -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">Memory Namespaces</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <div class="namespace-grid">
+                    <div class="namespace-card" data-search="session current work">
+                        <div class="namespace-name">session</div>
+                        <div>Current work state</div>
+                        <div class="namespace-ttl">TTL: 24 hours</div>
+                    </div>
+                    <div class="namespace-card" data-search="history interactions repo">
+                        <div class="namespace-name">history</div>
+                        <div>Interactions by repo</div>
+                        <div class="namespace-ttl">TTL: 30 days</div>
+                    </div>
+                    <div class="namespace-card" data-search="recovery checkpoints">
+                        <div class="namespace-name">recovery</div>
+                        <div>Checkpoints</div>
+                        <div class="namespace-ttl">TTL: 4 hours</div>
+                    </div>
+                    <div class="namespace-card" data-search="projects context">
+                        <div class="namespace-name">projects</div>
+                        <div>Project context</div>
+                        <div class="namespace-ttl">TTL: 30 days</div>
+                    </div>
+                    <div class="namespace-card" data-search="config settings">
+                        <div class="namespace-name">config</div>
+                        <div>Settings</div>
+                        <div class="namespace-ttl">TTL: Permanent</div>
+                    </div>
+                    <div class="namespace-card" data-search="agents status">
+                        <div class="namespace-name">agents</div>
+                        <div>Agent state</div>
+                        <div class="namespace-ttl">TTL: 1 hour</div>
+                    </div>
+                    <div class="namespace-card" data-search="file locks editing">
+                        <div class="namespace-name">file-locks</div>
+                        <div>Edit locks</div>
+                        <div class="namespace-ttl">TTL: 30 min</div>
+                    </div>
+                    <div class="namespace-card" data-search="agent-status real-time">
+                        <div class="namespace-name">agent-status</div>
+                        <div>Real-time status</div>
+                        <div class="namespace-ttl">TTL: 5 min</div>
+                    </div>
+                    <div class="namespace-card" data-search="agent-broadcast messages">
+                        <div class="namespace-name">agent-broadcast</div>
+                        <div>Inter-agent messages</div>
+                        <div class="namespace-ttl">TTL: 1 hour</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commands & Shortcuts -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">Commands & Shortcuts</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <h3 style="margin-bottom: 15px;">Navigation</h3>
+                <table>
+                    <tr data-search="next actions predict"><td><code>/n</code></td><td>Show predicted next actions</td><td><button class="copy-btn" onclick="copyText('/n')">Copy</button></td></tr>
+                    <tr data-search="history view"><td><code>/h</code></td><td>View interaction history</td><td><button class="copy-btn" onclick="copyText('/h')">Copy</button></td></tr>
+                    <tr data-search="context load project"><td><code>/c</code></td><td>Load project context</td><td><button class="copy-btn" onclick="copyText('/c')">Copy</button></td></tr>
+                    <tr data-search="sync file"><td><code>/s</code></td><td>Check file sync notifications</td><td><button class="copy-btn" onclick="copyText('/s')">Copy</button></td></tr>
+                </table>
+
+                <h3 style="margin: 25px 0 15px;">Git Operations</h3>
+                <table>
+                    <tr data-search="git smart"><td><code>/g</code></td><td>Git smart operations</td><td><button class="copy-btn" onclick="copyText('/g')">Copy</button></td></tr>
+                    <tr data-search="commit"><td><code>/g commit</code></td><td>Smart commit with generated message</td><td><button class="copy-btn" onclick="copyText('/g commit')">Copy</button></td></tr>
+                    <tr data-search="pull request pr"><td><code>/g pr</code></td><td>Generate pull request</td><td><button class="copy-btn" onclick="copyText('/g pr')">Copy</button></td></tr>
+                    <tr data-search="push"><td><code>/p</code></td><td>Push to remote</td><td><button class="copy-btn" onclick="copyText('/p')">Copy</button></td></tr>
+                    <tr data-search="status"><td><code>/st</code></td><td>Git status</td><td><button class="copy-btn" onclick="copyText('/st')">Copy</button></td></tr>
+                </table>
+
+                <h3 style="margin: 25px 0 15px;">Quality & Testing</h3>
+                <table>
+                    <tr data-search="review code"><td><code>/r</code></td><td>Auto code review</td><td><button class="copy-btn" onclick="copyText('/r')">Copy</button></td></tr>
+                    <tr data-search="test"><td><code>/t</code></td><td>Run tests with auto-fix</td><td><button class="copy-btn" onclick="copyText('/t')">Copy</button></td></tr>
+                    <tr data-search="all checks lint type"><td><code>/ok</code></td><td>Run ALL checks (lint, types, test, build)</td><td><button class="copy-btn" onclick="copyText('/ok')">Copy</button></td></tr>
+                    <tr data-search="fix auto"><td><code>/fix</code></td><td>Auto-fix lint/format issues</td><td><button class="copy-btn" onclick="copyText('/fix')">Copy</button></td></tr>
+                </table>
+
+                <h3 style="margin: 25px 0 15px;">Build & Deploy</h3>
+                <table>
+                    <tr data-search="build"><td><code>/b</code></td><td>Build project</td><td><button class="copy-btn" onclick="copyText('/b')">Copy</button></td></tr>
+                    <tr data-search="deploy production"><td><code>/d</code></td><td>Deploy to production</td><td><button class="copy-btn" onclick="copyText('/d')">Copy</button></td></tr>
+                    <tr data-search="done ship"><td><code>/done</code></td><td>Ship it (commit → push → PR)</td><td><button class="copy-btn" onclick="copyText('/done')">Copy</button></td></tr>
+                </table>
+
+                <h3 style="margin: 25px 0 15px;">Specialized Agents</h3>
+                <table>
+                    <tr data-search="dev development app"><td><code>/dev</code></td><td>App Development (Julian Stack)</td><td><button class="copy-btn" onclick="copyText('/dev')">Copy</button></td></tr>
+                    <tr data-search="hygiene data cleanup"><td><code>/hygiene</code></td><td>Data Hygiene Agent</td><td><button class="copy-btn" onclick="copyText('/hygiene')">Copy</button></td></tr>
+                    <tr data-search="marketing campaign"><td><code>/mkt</code></td><td>Marketing Orchestrator</td><td><button class="copy-btn" onclick="copyText('/mkt')">Copy</button></td></tr>
+                    <tr data-search="integrate mcp api"><td><code>/integrate</code></td><td>MCP Factory (API integration)</td><td><button class="copy-btn" onclick="copyText('/integrate')">Copy</button></td></tr>
+                    <tr data-search="script video"><td><code>/sw</code></td><td>Script Writing Agent</td><td><button class="copy-btn" onclick="copyText('/sw')">Copy</button></td></tr>
+                    <tr data-search="social media"><td><code>/sm</code></td><td>Social Media Agent</td><td><button class="copy-btn" onclick="copyText('/sm')">Copy</button></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Context Loading Triggers -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">Context Loading Triggers</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <p style="margin-bottom: 15px; color: var(--text-secondary);">Context loads autonomously based on detection. Loading is silent.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trigger</th>
+                            <th>Condition</th>
+                            <th>Loads</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Session Start</td><td>New session begins</td><td>session-startup.md</td></tr>
+                        <tr><td>Project Detected</td><td>package.json, Cargo.toml exists</td><td>state-management.md</td></tr>
+                        <tr><td>Julian Stack</td><td>drizzle.config.ts or trpc in package.json</td><td>julian-stack.md</td></tr>
+                        <tr><td>Multi-Agent Task</td><td>Swarm/hive intent detected</td><td>recovery-protocol.md, swarm-guide.md</td></tr>
+                        <tr><td>Agent Name</td><td>Marcus, Tyler, Rex, etc. mentioned</td><td>_registry.md</td></tr>
+                        <tr><td>TypeScript Error</td><td>TS error pattern detected</td><td>typescript-pro agent</td></tr>
+                        <tr><td>Test Failure</td><td>Test failure pattern detected</td><td>test-automator agent</td></tr>
+                        <tr><td>Marketing Task</td><td>campaign, ad copy keywords</td><td>marketing-orchestrator.md</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- File Structure -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span class="section-title">File Structure</span>
+                <span class="section-toggle">&#9660;</span>
+            </div>
+            <div class="section-content">
+                <pre style="background: var(--bg-primary); padding: 20px; border-radius: 8px; overflow-x: auto; font-family: monospace;">
+/root/.claude/
+├── CLAUDE.md                     # Minimal orchestrator (6.5K chars)
+├── workflows/
+│   ├── session-startup.md
+│   ├── state-management.md
+│   ├── proactive-actions.md
+│   ├── recovery-protocol.md
+│   ├── history-tracking.md
+│   ├── file-sync.md
+│   └── hive-coordination.md
+├── agents/
+│   ├── _registry.md              # Named agents (20 total)
+│   └── [106 agent definitions]
+├── knowledge/
+│   ├── julian-stack.md
+│   ├── swarm-orchestration-guide.md
+│   └── [24 knowledge files]
+├── commands/                      # 191 slash commands
+├── docs/
+│   └── claude-system-reference.html
+└── config/
+
+/root/.claude-flow/
+├── context-loading/
+│   ├── triggers.json             # Auto-load triggers
+│   └── knowledge-index.json      # Knowledge file index
+├── agent-coordination/
+│   ├── named-agents.json         # Agent naming config
+│   └── protocol.json
+└── [memory, recovery, workers]
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Julian's Claude System Reference | Generated December 2025</p>
+        <p>CLAUDE.md reduced from 65,000 to 6,458 characters (90% reduction)</p>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#e94560',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#533483',
+                lineColor: '#a0a0a0',
+                secondaryColor: '#16213e',
+                tertiaryColor: '#0f3460'
+            }
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        function toggleSection(header) {
+            header.parentElement.classList.toggle('collapsed');
+        }
+
+        function filterContent(query) {
+            const q = query.toLowerCase();
+            document.querySelectorAll('[data-search]').forEach(el => {
+                const searchText = el.getAttribute('data-search').toLowerCase();
+                const visible = searchText.includes(q) || q === '';
+                el.style.display = visible ? '' : 'none';
+            });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            event.target.textContent = 'Copied!';
+            setTimeout(() => event.target.textContent = 'Copy', 1000);
+        }
+    </script>
+</body>
+</html>

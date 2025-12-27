@@ -1,0 +1,263 @@
+{
+  "version": "3.0",
+  "description": "Consolidated memory namespaces - reduced from 22 to 12 for efficiency",
+  "lastUpdated": "2025-12-18",
+  "migrationNotes": "See state-preservation.md for key mapping from v2",
+
+  "namespaces": {
+    "session": {
+      "purpose": "Current work context for active session",
+      "ttl": 86400,
+      "ttlHuman": "24 hours",
+      "keys": ["current-task", "active-project", "session-context"],
+      "autoCleanup": true
+    },
+
+    "state": {
+      "purpose": "UNIFIED: Checkpoints, recovery, and task results (replaces recovery + results)",
+      "ttl": 14400,
+      "ttlHuman": "4 hours (CANONICAL)",
+      "keys": [
+        "checkpoint-active",
+        "checkpoint-{timestamp}",
+        "result-{id}",
+        "swarm-result-{id}"
+      ],
+      "schema": {
+        "checkpoint": {
+          "version": "2.0",
+          "checkpointId": "string",
+          "status": "active|completed|abandoned",
+          "workflow": "object",
+          "agents": "array",
+          "context": "object",
+          "pendingWork": "array"
+        }
+      },
+      "autoCleanup": true,
+      "historyTTL": 604800
+    },
+
+    "agent-coordinator": {
+      "purpose": "UNIFIED: All agent status, progress, and communication (replaces agents + agent-status + agent-broadcast)",
+      "ttl": 900,
+      "ttlHuman": "15 minutes (refreshed by heartbeat)",
+      "keys": [
+        "agent-{name}",
+        "msg-{from}-{to}",
+        "blocker-{timestamp}",
+        "active-agents"
+      ],
+      "schema": {
+        "agent": {
+          "name": "string",
+          "status": "working|idle|blocked|completed",
+          "task": "string",
+          "progress": "string",
+          "filesLocked": "array",
+          "lastHeartbeat": "timestamp",
+          "checkpointRef": "string"
+        },
+        "message": {
+          "from": "string",
+          "to": "string",
+          "type": "info|blocker|request|response",
+          "content": "any",
+          "timestamp": "timestamp"
+        }
+      },
+      "autoCleanup": true
+    },
+
+    "coordination": {
+      "purpose": "UNIFIED: File locks and swarm coordination (replaces file-locks + swarms)",
+      "ttl": 1800,
+      "ttlHuman": "30 minutes",
+      "keys": [
+        "lock-{filepath-hash}",
+        "swarm-{id}",
+        "active-swarms"
+      ],
+      "schema": {
+        "lock": {
+          "filepath": "string",
+          "lockedBy": "string",
+          "since": "timestamp",
+          "expiresAt": "timestamp"
+        },
+        "swarm": {
+          "id": "string",
+          "task": "string",
+          "phases": "array",
+          "agents": "array",
+          "status": "active|completed|failed"
+        }
+      },
+      "autoCleanup": true
+    },
+
+    "projects": {
+      "purpose": "Project knowledge and context cache",
+      "ttl": 2592000,
+      "ttlHuman": "30 days",
+      "keys": ["{project-name}", "active-projects-index"],
+      "autoCleanup": false
+    },
+
+    "history": {
+      "purpose": "Interaction history grouped by repository",
+      "ttl": 2592000,
+      "ttlHuman": "30 days",
+      "keys": ["recent-interactions", "{repo-name}"],
+      "format": "grouped-by-repo-v2",
+      "maxEntries": 7
+    },
+
+    "config": {
+      "purpose": "UNIFIED: User preferences, settings, and learned patterns (replaces config + patterns)",
+      "ttl": null,
+      "ttlHuman": "Permanent",
+      "keys": [
+        "julian-agents",
+        "julian-stack-summary",
+        "rate-limit-config",
+        "common-sequences",
+        "successful-combos",
+        "file-structure-version"
+      ],
+      "autoCleanup": false
+    },
+
+    "quality": {
+      "purpose": "UNIFIED: Code reviews and test results (replaces reviews + test-results)",
+      "ttl": 604800,
+      "ttlHuman": "7 days",
+      "keys": [
+        "review-{file}",
+        "test-{project}-{timestamp}",
+        "patterns"
+      ],
+      "autoCleanup": true
+    },
+
+    "orchestration": {
+      "purpose": "UNIFIED: Night-shift and orchestration history (replaces night-shift as separate)",
+      "ttl": 32400,
+      "ttlHuman": "9 hours (for night-shift), 90 days for history",
+      "keys": [
+        "night-shift-config",
+        "night-shift-queue",
+        "night-shift-progress",
+        "orchestration-{id}",
+        "bubba-learning"
+      ],
+      "schema": {
+        "nightShift": {
+          "mode": "active|paused|shutdown",
+          "startedAt": "timestamp",
+          "duration": "string",
+          "maxConcurrentAgents": "number"
+        },
+        "task": {
+          "id": "string",
+          "description": "string",
+          "priority": "critical|high|medium|low",
+          "status": "pending|in_progress|completed|failed"
+        }
+      },
+      "autoCleanup": true
+    },
+
+    "monitoring": {
+      "purpose": "UNIFIED: Context health and system metrics (replaces context-health)",
+      "ttl": 14400,
+      "ttlHuman": "4 hours",
+      "keys": [
+        "context-estimate",
+        "agent-budget",
+        "connection-health",
+        "performance-metrics"
+      ],
+      "thresholds": {
+        "compress": 0.50,
+        "warn": 0.70,
+        "emergency": 0.85
+      },
+      "autoCleanup": true
+    },
+
+    "domain": {
+      "purpose": "UNIFIED: Domain-specific data (replaces sixsigma + marketing + social-media + scripts)",
+      "ttl": 7776000,
+      "ttlHuman": "90 days",
+      "keys": [
+        "sixsigma-{project-id}",
+        "marketing-campaigns",
+        "social-media-calendar",
+        "scripts-{client}",
+        "advisors-{session}"
+      ],
+      "autoCleanup": false
+    },
+
+    "learning": {
+      "purpose": "Pattern learning and ML data for agents",
+      "ttl": 2592000,
+      "ttlHuman": "30 days",
+      "keys": [
+        "task-patterns",
+        "agent-performance",
+        "common-blockers",
+        "successful-strategies"
+      ],
+      "autoCleanup": false
+    }
+  },
+
+  "deprecated": {
+    "recovery": "Merged into 'state'",
+    "results": "Merged into 'state'",
+    "agents": "Merged into 'agent-coordinator'",
+    "agent-status": "Merged into 'agent-coordinator'",
+    "agent-broadcast": "Merged into 'agent-coordinator'",
+    "agent-registry": "Merged into 'agent-coordinator'",
+    "file-locks": "Merged into 'coordination'",
+    "swarms": "Merged into 'coordination'",
+    "reviews": "Merged into 'quality'",
+    "test-results": "Merged into 'quality'",
+    "patterns": "Merged into 'config'",
+    "night-shift": "Merged into 'orchestration'",
+    "context-health": "Merged into 'monitoring'",
+    "sixsigma": "Merged into 'domain'",
+    "marketing": "Merged into 'domain'",
+    "social-media": "Merged into 'domain'",
+    "scripts": "Merged into 'domain'",
+    "advisors": "Merged into 'domain'",
+    "sync": "Merged into 'session'",
+    "migration": "Merged into 'config'",
+    "additions": "Merged into 'config'"
+  },
+
+  "canonicalTTLs": {
+    "shortLived": 900,
+    "shortLivedHuman": "15 minutes - agent heartbeats",
+    "medium": 14400,
+    "mediumHuman": "4 hours - checkpoints, context health",
+    "session": 86400,
+    "sessionHuman": "24 hours - session data",
+    "extended": 604800,
+    "extendedHuman": "7 days - quality data",
+    "longTerm": 2592000,
+    "longTermHuman": "30 days - history, projects",
+    "archive": 7776000,
+    "archiveHuman": "90 days - domain data",
+    "permanent": null
+  },
+
+  "cleanupRules": {
+    "runOnSessionStart": true,
+    "removeExpired": true,
+    "compressOlderThan": 86400,
+    "batchCleanupEnabled": true
+  }
+}

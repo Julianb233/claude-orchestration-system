@@ -1,0 +1,76 @@
+{
+  "api": {
+    "baseUrl": "https://api.cloudflare.com/client/v4",
+    "credentials": {
+      "source": "notion",
+      "search": "Cloudflare API key"
+    }
+  },
+  "domains": {
+    "blueprintplan.com": {
+      "zoneId": "${CLOUDFLARE_ZONE_ID}",
+      "default": true,
+      "subdomains": {
+        "allowed": [
+          "bubba",
+          "dashboard",
+          "app",
+          "api",
+          "docs",
+          "portal",
+          "client-*"
+        ],
+        "reserved": [
+          "www",
+          "mail",
+          "admin"
+        ]
+      }
+    },
+    "aiacrobatics.com": {
+      "zoneId": "${CLOUDFLARE_AIACROBATICS_ZONE_ID}",
+      "default": false,
+      "subdomains": {
+        "allowed": ["*"],
+        "reserved": ["www", "mail"]
+      }
+    }
+  },
+  "pages": {
+    "enabled": true,
+    "accountId": "${CLOUDFLARE_ACCOUNT_ID}",
+    "defaultBranch": "main",
+    "buildSettings": {
+      "framework": "auto",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist"
+    }
+  },
+  "dns": {
+    "defaultTTL": 1,
+    "proxied": true,
+    "types": {
+      "subdomain": "CNAME",
+      "redirect": "A",
+      "api": "CNAME"
+    }
+  },
+  "workers": {
+    "enabled": true,
+    "routePrefix": "api."
+  },
+  "templates": {
+    "subdomain": {
+      "type": "CNAME",
+      "content": "{project}.pages.dev",
+      "proxied": true,
+      "ttl": 1
+    },
+    "redirect": {
+      "type": "A",
+      "content": "192.0.2.1",
+      "proxied": true,
+      "ttl": 1
+    }
+  }
+}

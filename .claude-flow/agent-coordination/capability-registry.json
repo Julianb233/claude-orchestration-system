@@ -1,0 +1,227 @@
+{
+  "version": "1.0",
+  "name": "Agent Capability Registry",
+  "description": "Maps agent types to their capabilities for dynamic task matching",
+  "lastUpdated": null,
+
+  "capabilityTaxonomy": {
+    "coding": {
+      "subcategories": {
+        "frontend": ["react", "vue", "angular", "svelte", "html", "css", "tailwind", "nextjs"],
+        "backend": ["nodejs", "python", "go", "rust", "java", "csharp", "ruby", "php", "elixir"],
+        "mobile": ["react-native", "flutter", "swift", "kotlin", "expo"],
+        "database": ["sql", "postgresql", "mysql", "mongodb", "redis", "prisma", "drizzle"],
+        "devops": ["docker", "kubernetes", "terraform", "ci-cd", "github-actions"],
+        "testing": ["unit-testing", "integration-testing", "e2e-testing", "tdd"]
+      }
+    },
+    "architecture": {
+      "subcategories": {
+        "design": ["system-design", "api-design", "database-design", "microservices"],
+        "patterns": ["clean-architecture", "ddd", "event-driven", "cqrs"],
+        "cloud": ["aws", "azure", "gcp", "serverless", "edge-computing"]
+      }
+    },
+    "security": {
+      "subcategories": {
+        "assessment": ["vulnerability-scanning", "penetration-testing", "code-review"],
+        "implementation": ["authentication", "authorization", "encryption", "owasp"],
+        "compliance": ["gdpr", "hipaa", "soc2", "pci-dss"]
+      }
+    },
+    "content": {
+      "subcategories": {
+        "writing": ["technical-writing", "marketing-copy", "documentation", "tutorials"],
+        "seo": ["keyword-research", "content-optimization", "link-building"],
+        "media": ["social-media", "video-scripts", "ad-copy"]
+      }
+    },
+    "research": {
+      "subcategories": {
+        "technical": ["api-documentation", "library-research", "best-practices"],
+        "market": ["competitor-analysis", "industry-trends", "user-research"],
+        "data": ["data-analysis", "statistical-modeling", "visualization"]
+      }
+    },
+    "operations": {
+      "subcategories": {
+        "project": ["task-management", "resource-planning", "risk-assessment"],
+        "support": ["troubleshooting", "incident-response", "customer-support"],
+        "automation": ["workflow-automation", "scripting", "integration"]
+      }
+    }
+  },
+
+  "agentCapabilities": {
+    "typescript-pro": {
+      "primaryCapabilities": ["typescript", "javascript", "nodejs", "react", "nextjs"],
+      "secondaryCapabilities": ["testing", "api-design", "frontend"],
+      "specializations": ["advanced-types", "generics", "decorators"],
+      "taskTypes": ["coding", "refactoring", "type-safety"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "python-pro": {
+      "primaryCapabilities": ["python", "fastapi", "django", "data-analysis"],
+      "secondaryCapabilities": ["ml-engineering", "scripting", "automation"],
+      "specializations": ["async-programming", "performance-optimization"],
+      "taskTypes": ["coding", "data-processing", "api-development"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "frontend-developer": {
+      "primaryCapabilities": ["react", "nextjs", "css", "tailwind", "accessibility"],
+      "secondaryCapabilities": ["typescript", "testing", "performance"],
+      "specializations": ["responsive-design", "component-architecture", "state-management"],
+      "taskTypes": ["ui-development", "styling", "user-experience"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "backend-architect": {
+      "primaryCapabilities": ["api-design", "microservices", "system-design", "databases"],
+      "secondaryCapabilities": ["security", "performance", "scalability"],
+      "specializations": ["distributed-systems", "event-driven-architecture"],
+      "taskTypes": ["architecture", "design-review", "technical-leadership"],
+      "complexity": "expert",
+      "autonomy": "high"
+    },
+    "database-architect": {
+      "primaryCapabilities": ["database-design", "sql", "postgresql", "data-modeling"],
+      "secondaryCapabilities": ["performance-tuning", "migration", "replication"],
+      "specializations": ["schema-optimization", "query-optimization"],
+      "taskTypes": ["database-design", "optimization", "migration"],
+      "complexity": "expert",
+      "autonomy": "high"
+    },
+    "security-auditor": {
+      "primaryCapabilities": ["vulnerability-scanning", "code-review", "owasp"],
+      "secondaryCapabilities": ["authentication", "encryption", "compliance"],
+      "specializations": ["devsecops", "threat-modeling"],
+      "taskTypes": ["security-audit", "penetration-testing", "compliance-review"],
+      "complexity": "expert",
+      "autonomy": "medium"
+    },
+    "test-automator": {
+      "primaryCapabilities": ["unit-testing", "integration-testing", "e2e-testing"],
+      "secondaryCapabilities": ["tdd", "ci-cd", "quality-assurance"],
+      "specializations": ["test-strategy", "coverage-optimization"],
+      "taskTypes": ["test-writing", "test-automation", "qa-planning"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "devops-troubleshooter": {
+      "primaryCapabilities": ["kubernetes", "docker", "ci-cd", "monitoring"],
+      "secondaryCapabilities": ["logging", "alerting", "incident-response"],
+      "specializations": ["performance-debugging", "infrastructure-optimization"],
+      "taskTypes": ["troubleshooting", "deployment", "infrastructure"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "ai-engineer": {
+      "primaryCapabilities": ["llm-integration", "rag-systems", "prompt-engineering"],
+      "secondaryCapabilities": ["vector-databases", "embeddings", "fine-tuning"],
+      "specializations": ["agent-development", "multimodal-ai"],
+      "taskTypes": ["ai-features", "chatbots", "intelligent-automation"],
+      "complexity": "expert",
+      "autonomy": "high"
+    },
+    "content-marketer": {
+      "primaryCapabilities": ["marketing-copy", "content-optimization", "seo"],
+      "secondaryCapabilities": ["social-media", "email-marketing", "analytics"],
+      "specializations": ["conversion-optimization", "brand-voice"],
+      "taskTypes": ["content-creation", "campaign-planning", "analytics"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "code-reviewer": {
+      "primaryCapabilities": ["code-review", "best-practices", "code-quality"],
+      "secondaryCapabilities": ["security-review", "performance-review"],
+      "specializations": ["pattern-recognition", "refactoring-suggestions"],
+      "taskTypes": ["review", "quality-assurance", "mentoring"],
+      "complexity": "high",
+      "autonomy": "medium"
+    },
+    "debugger": {
+      "primaryCapabilities": ["debugging", "error-analysis", "root-cause-analysis"],
+      "secondaryCapabilities": ["logging", "profiling", "stack-trace-analysis"],
+      "specializations": ["memory-issues", "race-conditions", "performance-bottlenecks"],
+      "taskTypes": ["bug-fixing", "troubleshooting", "investigation"],
+      "complexity": "high",
+      "autonomy": "high"
+    },
+    "docs-architect": {
+      "primaryCapabilities": ["technical-writing", "documentation", "api-docs"],
+      "secondaryCapabilities": ["tutorials", "architecture-diagrams"],
+      "specializations": ["developer-experience", "information-architecture"],
+      "taskTypes": ["documentation", "guides", "reference-materials"],
+      "complexity": "high",
+      "autonomy": "high"
+    }
+  },
+
+  "taskToCapabilityMapping": {
+    "implement_feature": {
+      "requiredCapabilities": ["coding"],
+      "preferredAgents": ["typescript-pro", "python-pro", "frontend-developer"],
+      "minComplexity": "medium"
+    },
+    "fix_bug": {
+      "requiredCapabilities": ["debugging", "coding"],
+      "preferredAgents": ["debugger", "typescript-pro", "python-pro"],
+      "minComplexity": "medium"
+    },
+    "design_architecture": {
+      "requiredCapabilities": ["system-design", "api-design"],
+      "preferredAgents": ["backend-architect", "database-architect"],
+      "minComplexity": "expert"
+    },
+    "security_audit": {
+      "requiredCapabilities": ["security", "code-review"],
+      "preferredAgents": ["security-auditor"],
+      "minComplexity": "expert"
+    },
+    "write_tests": {
+      "requiredCapabilities": ["testing", "coding"],
+      "preferredAgents": ["test-automator", "tdd-orchestrator"],
+      "minComplexity": "medium"
+    },
+    "optimize_performance": {
+      "requiredCapabilities": ["performance", "profiling"],
+      "preferredAgents": ["performance-engineer", "database-optimizer"],
+      "minComplexity": "high"
+    },
+    "create_documentation": {
+      "requiredCapabilities": ["technical-writing", "documentation"],
+      "preferredAgents": ["docs-architect", "api-documenter"],
+      "minComplexity": "medium"
+    },
+    "deploy_infrastructure": {
+      "requiredCapabilities": ["devops", "ci-cd"],
+      "preferredAgents": ["deployment-engineer", "cloud-architect"],
+      "minComplexity": "high"
+    },
+    "research_topic": {
+      "requiredCapabilities": ["research"],
+      "preferredAgents": ["search-specialist", "Explore"],
+      "minComplexity": "medium"
+    },
+    "marketing_content": {
+      "requiredCapabilities": ["content", "marketing"],
+      "preferredAgents": ["content-marketer", "seo-content-writer"],
+      "minComplexity": "medium"
+    }
+  },
+
+  "matchingAlgorithm": {
+    "weights": {
+      "primaryCapabilityMatch": 3.0,
+      "secondaryCapabilityMatch": 1.5,
+      "specializationMatch": 2.0,
+      "complexityFit": 1.0,
+      "currentLoad": -0.5,
+      "recentSuccess": 0.8
+    },
+    "minimumScore": 0.5,
+    "fallbackBehavior": "use_general_purpose"
+  }
+}

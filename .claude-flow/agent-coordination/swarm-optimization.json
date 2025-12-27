@@ -1,0 +1,216 @@
+{
+  "version": "1.0",
+  "name": "Swarm Topology Auto-Optimization System",
+  "description": "Automatically optimizes swarm topology based on task patterns and performance metrics",
+  "lastUpdated": null,
+
+  "topologySelection": {
+    "rules": [
+      {
+        "condition": {
+          "taskType": "feature_implementation",
+          "parallelizableTasks": ">3",
+          "teamSize": ">2"
+        },
+        "recommendedTopology": "hierarchical",
+        "reasoning": "Complex features benefit from central coordination"
+      },
+      {
+        "condition": {
+          "taskType": "research",
+          "independentTasks": ">3"
+        },
+        "recommendedTopology": "mesh",
+        "reasoning": "Research tasks benefit from peer-to-peer discovery"
+      },
+      {
+        "condition": {
+          "taskType": "multi_domain",
+          "distinctDomains": ">2"
+        },
+        "recommendedTopology": "star",
+        "reasoning": "Different domains need specialized spokes"
+      },
+      {
+        "condition": {
+          "taskType": "pipeline",
+          "sequentialSteps": ">3"
+        },
+        "recommendedTopology": "ring",
+        "reasoning": "Sequential processing benefits from ring structure"
+      },
+      {
+        "condition": {
+          "taskType": "exploration",
+          "unknownScope": true
+        },
+        "recommendedTopology": "swarm",
+        "reasoning": "Unknown scope benefits from emergent organization"
+      }
+    ],
+    "defaultTopology": "hierarchical"
+  },
+
+  "dynamicRebalancing": {
+    "triggers": [
+      {
+        "name": "load_imbalance",
+        "condition": "maxLoad / minLoad > 2.0",
+        "action": "redistribute_tasks"
+      },
+      {
+        "name": "bottleneck_detected",
+        "condition": "singleAgentQueueDepth > 5",
+        "action": "spawn_helper_agent"
+      },
+      {
+        "name": "idle_agents",
+        "condition": "idleAgentCount > totalAgents * 0.3",
+        "action": "consolidate_or_assign"
+      },
+      {
+        "name": "high_failure_rate",
+        "condition": "agentFailureRate > 0.2",
+        "action": "replace_failing_agent"
+      },
+      {
+        "name": "communication_overhead",
+        "condition": "messageCount / taskCount > 10",
+        "action": "optimize_topology"
+      }
+    ],
+    "rebalanceInterval": 60,
+    "cooldownPeriod": 30
+  },
+
+  "agentScaling": {
+    "autoScale": {
+      "enabled": true,
+      "minAgents": 1,
+      "maxAgents": 10,
+      "scaleUpThreshold": {
+        "queueDepth": 5,
+        "averageWaitTime": 120
+      },
+      "scaleDownThreshold": {
+        "idleTime": 300,
+        "utilizationRate": 0.2
+      }
+    },
+    "scalingStrategies": {
+      "aggressive": {
+        "scaleUpMultiplier": 2.0,
+        "scaleDownDelay": 60,
+        "useWhen": "urgent_deadline"
+      },
+      "conservative": {
+        "scaleUpMultiplier": 1.2,
+        "scaleDownDelay": 300,
+        "useWhen": "normal_operation"
+      },
+      "economical": {
+        "scaleUpMultiplier": 1.1,
+        "scaleDownDelay": 120,
+        "useWhen": "cost_sensitive"
+      }
+    },
+    "defaultStrategy": "conservative"
+  },
+
+  "performanceOptimization": {
+    "metrics": {
+      "throughput": {
+        "target": "maximize",
+        "weight": 1.0
+      },
+      "latency": {
+        "target": "minimize",
+        "weight": 0.8
+      },
+      "resourceUsage": {
+        "target": "optimize",
+        "weight": 0.6
+      },
+      "errorRate": {
+        "target": "minimize",
+        "weight": 1.2
+      },
+      "contextSwitching": {
+        "target": "minimize",
+        "weight": 0.5
+      }
+    },
+    "optimizationInterval": 300,
+    "learningRate": 0.1
+  },
+
+  "topologyTransitions": {
+    "hierarchical_to_mesh": {
+      "condition": "All tasks independent, no dependencies remaining",
+      "process": [
+        "Promote all workers to peers",
+        "Remove coordinator role",
+        "Enable peer-to-peer messaging"
+      ]
+    },
+    "mesh_to_hierarchical": {
+      "condition": "Conflict resolution needed or dependencies emerge",
+      "process": [
+        "Elect coordinator based on capability score",
+        "Demote others to workers",
+        "Centralize task assignment"
+      ]
+    },
+    "star_to_hierarchical": {
+      "condition": "Spoke count exceeds optimal",
+      "process": [
+        "Group related spokes under sub-coordinators",
+        "Hub becomes top coordinator",
+        "Create hierarchical layers"
+      ]
+    },
+    "any_to_swarm": {
+      "condition": "High uncertainty, need exploration",
+      "process": [
+        "Release all rigid structures",
+        "Enable self-organization",
+        "Activate emergent coordination"
+      ]
+    }
+  },
+
+  "affinityRules": {
+    "taskAffinity": {
+      "description": "Keep related tasks on same agent for context",
+      "factors": [
+        {"name": "same_file", "weight": 3.0},
+        {"name": "same_feature", "weight": 2.0},
+        {"name": "same_domain", "weight": 1.5},
+        {"name": "recent_collaboration", "weight": 1.0}
+      ]
+    },
+    "antiAffinity": {
+      "description": "Separate tasks that might conflict",
+      "factors": [
+        {"name": "same_file_write", "weight": -3.0},
+        {"name": "resource_contention", "weight": -2.0}
+      ]
+    }
+  },
+
+  "faultTolerance": {
+    "redundancy": {
+      "criticalTasks": 2,
+      "normalTasks": 1
+    },
+    "failover": {
+      "enabled": true,
+      "maxRetries": 3,
+      "backoffStrategy": "exponential"
+    },
+    "checkpointing": {
+      "interval": 60,
+      "namespace": "swarm/checkpoints"
+    }
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2024-12-17T00:00:00Z",
+  "description": "KPI targets and goals for AI Acrobatics agent system",
+
+  "agent_goals": {
+    "script_writer": {
+      "qc_pass_rate": {
+        "target": 0.90,
+        "current": 0.82,
+        "priority": "high",
+        "description": "Scripts passing QC on first review"
+      },
+      "first_pass_rate": {
+        "target": 0.85,
+        "current": 0.75,
+        "priority": "high",
+        "description": "Scripts needing no revisions"
+      },
+      "avg_completion_time_min": {
+        "target": 4,
+        "current": 5.2,
+        "priority": "medium",
+        "description": "Average time to complete a script"
+      },
+      "brand_consistency_score": {
+        "target": 9.0,
+        "current": 8.5,
+        "priority": "high",
+        "description": "Brand voice alignment score"
+      }
+    },
+    "marketing_orchestrator": {
+      "campaign_completion_rate": {
+        "target": 0.98,
+        "current": 0.95,
+        "priority": "high",
+        "description": "Campaigns completed successfully"
+      },
+      "avg_deliverables_per_campaign": {
+        "target": 15,
+        "current": 12,
+        "priority": "medium",
+        "description": "Average content pieces per campaign"
+      },
+      "client_satisfaction": {
+        "target": 4.8,
+        "current": 4.7,
+        "priority": "high",
+        "description": "Client satisfaction score (1-5)"
+      }
+    },
+    "board_of_advisors": {
+      "implementation_rate": {
+        "target": 0.80,
+        "current": 0.72,
+        "priority": "medium",
+        "description": "Recommendations implemented by clients"
+      },
+      "framework_accuracy": {
+        "target": 0.95,
+        "current": 0.92,
+        "priority": "medium",
+        "description": "Correct framework application"
+      }
+    },
+    "qc_agent": {
+      "review_accuracy": {
+        "target": 0.98,
+        "current": 0.95,
+        "priority": "high",
+        "description": "Correct pass/fail decisions"
+      },
+      "avg_review_time_min": {
+        "target": 1,
+        "current": 1.5,
+        "priority": "low",
+        "description": "Time to complete QC review"
+      }
+    }
+  },
+
+  "delivery_goals": {
+    "on_time_delivery": {
+      "target": 0.98,
+      "current": 0.95,
+      "priority": "critical",
+      "description": "Deliverables meeting deadlines"
+    },
+    "monthly_deliverables": {
+      "target": 100,
+      "current": 89,
+      "priority": "high",
+      "description": "Total deliverables per month"
+    },
+    "avg_qc_score": {
+      "target": 8.5,
+      "current": 8.3,
+      "priority": "high",
+      "description": "Average quality score across deliverables"
+    },
+    "revision_rate": {
+      "target": 0.10,
+      "current": 0.18,
+      "priority": "high",
+      "description": "Percentage needing revisions (lower is better)"
+    },
+    "client_retention": {
+      "target": 0.95,
+      "current": 0.92,
+      "priority": "critical",
+      "description": "Client retention rate"
+    }
+  },
+
+  "system_goals": {
+    "pipeline_success_rate": {
+      "target": 0.99,
+      "current": 0.94,
+      "priority": "high",
+      "description": "Pipelines completing without errors"
+    },
+    "cache_hit_rate": {
+      "target": 0.95,
+      "current": 0.89,
+      "priority": "medium",
+      "description": "Memory cache effectiveness"
+    },
+    "avg_response_time_s": {
+      "target": 3,
+      "current": 4.2,
+      "priority": "medium",
+      "description": "Average system response time"
+    },
+    "system_uptime": {
+      "target": 0.999,
+      "current": 0.998,
+      "priority": "critical",
+      "description": "System availability"
+    },
+    "error_rate": {
+      "target": 0.01,
+      "current": 0.02,
+      "priority": "high",
+      "description": "System error rate (lower is better)"
+    }
+  },
+
+  "business_goals": {
+    "monthly_revenue": {
+      "target": 50000,
+      "current": 42000,
+      "currency": "USD",
+      "priority": "critical",
+      "description": "Monthly recurring revenue"
+    },
+    "client_count": {
+      "target": 15,
+      "current": 8,
+      "priority": "high",
+      "description": "Total active clients"
+    },
+    "avg_project_value": {
+      "target": 5000,
+      "current": 4200,
+      "currency": "USD",
+      "priority": "medium",
+      "description": "Average project value"
+    },
+    "profit_margin": {
+      "target": 0.60,
+      "current": 0.55,
+      "priority": "high",
+      "description": "Profit margin percentage"
+    }
+  },
+
+  "quarterly_targets": {
+    "Q1_2025": {
+      "deliverables": 300,
+      "new_clients": 5,
+      "revenue": 150000,
+      "qc_score_avg": 8.5
+    },
+    "Q2_2025": {
+      "deliverables": 400,
+      "new_clients": 7,
+      "revenue": 200000,
+      "qc_score_avg": 8.7
+    }
+  },
+
+  "alert_thresholds": {
+    "qc_score_critical": {
+      "threshold": 6.5,
+      "comparison": "below",
+      "action": "immediate_review",
+      "notification": "critical"
+    },
+    "qc_score_warning": {
+      "threshold": 7.5,
+      "comparison": "below",
+      "action": "flag_for_review",
+      "notification": "warning"
+    },
+    "revision_rate_high": {
+      "threshold": 0.25,
+      "comparison": "above",
+      "action": "agent_audit",
+      "notification": "warning"
+    },
+    "delivery_delay": {
+      "threshold": 24,
+      "unit": "hours",
+      "comparison": "overdue",
+      "action": "escalate",
+      "notification": "critical"
+    },
+    "pipeline_failure_rate": {
+      "threshold": 0.10,
+      "comparison": "above",
+      "action": "system_check",
+      "notification": "critical"
+    }
+  },
+
+  "improvement_initiatives": [
+    {
+      "id": "init-001",
+      "name": "Script Quality Improvement",
+      "description": "Reduce script revision rate from 18% to 10%",
+      "target_metric": "revision_rate",
+      "target_value": 0.10,
+      "current_value": 0.18,
+      "actions": [
+        "Enhanced brand voice training for script-writer",
+        "Improved QC feedback loop",
+        "Template library expansion"
+      ],
+      "deadline": "2025-02-01",
+      "status": "in_progress"
+    },
+    {
+      "id": "init-002",
+      "name": "Response Time Optimization",
+      "description": "Reduce average response time from 4.2s to 3s",
+      "target_metric": "avg_response_time_s",
+      "target_value": 3,
+      "current_value": 4.2,
+      "actions": [
+        "Memory caching optimization",
+        "Parallel agent execution",
+        "Pipeline streamlining"
+      ],
+      "deadline": "2025-01-15",
+      "status": "in_progress"
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} - Support Documentation</title>
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        /* Support Doc specific styles */
+        .support-header {
+            background: var(--color-surface);
+            padding: var(--space-8);
+            border-bottom: 1px solid var(--color-border);
+            margin: calc(-1 * var(--space-8));
+            margin-bottom: var(--space-8);
+        }
+
+        .support-header h1 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .support-search {
+            max-width: 500px;
+            margin: var(--space-6) 0 0 0;
+        }
+
+        .support-search input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--text-base);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .support-search input:focus {
+            border-color: var(--color-primary);
+        }
+
+        .category-nav {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin: var(--space-6) 0;
+        }
+
+        .category-pill {
+            padding: var(--space-2) var(--space-4);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: var(--space-8) 0;
+        }
+
+        .faq-category {
+            margin-bottom: var(--space-6);
+        }
+
+        .faq-category-title {
+            font-size: var(--text-xl);
+            color: var(--color-primary);
+            padding-bottom: var(--space-2);
+            border-bottom: 2px solid var(--color-primary);
+            margin-bottom: var(--space-4);
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: var(--space-4);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover {
+            background: var(--color-surface);
+        }
+
+        .faq-question::before {
+            content: "Q:";
+            color: var(--color-primary);
+            margin-right: var(--space-2);
+        }
+
+        .faq-toggle {
+            font-size: var(--text-xl);
+            color: var(--color-text-light);
+            transition: transform 0.2s;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--space-4) var(--space-4) var(--space-4);
+            color: var(--color-text-light);
+            border-top: 1px solid var(--color-border);
+            display: none;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        /* Troubleshooting Section */
+        .troubleshoot-guide {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin: var(--space-6) 0;
+        }
+
+        .troubleshoot-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--color-error);
+        }
+
+        .symptom-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .symptom-box h4 {
+            color: #991B1B;
+            margin: 0 0 var(--space-2) 0;
+        }
+
+        .causes-list {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .causes-list h4 {
+            color: #92400E;
+            margin: 0 0 var(--space-2) 0;
+        }
+
+        .solution-box {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .solution-box h4 {
+            color: #065F46;
+            margin: 0 0 var(--space-2) 0;
+        }
+
+        .decision-tree {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .decision-step {
+            padding: var(--space-3);
+            border-left: 3px solid var(--color-info);
+            margin: var(--space-3) 0;
+            margin-left: var(--space-4);
+        }
+
+        /* Knowledge Base Article */
+        .kb-article {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin: var(--space-4) 0;
+        }
+
+        .kb-article-header {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .kb-article-meta {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            margin-top: var(--space-2);
+            font-size: var(--text-sm);
+            color: var(--color-text-light);
+        }
+
+        .kb-tags {
+            margin-top: var(--space-4);
+        }
+
+        .related-articles {
+            background: var(--color-surface);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-6);
+        }
+
+        .related-articles h4 {
+            margin: 0 0 var(--space-3) 0;
+        }
+
+        .related-articles ul {
+            margin: 0;
+            padding-left: var(--space-4);
+        }
+
+        /* Contact Support */
+        .contact-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin: var(--space-8) 0;
+        }
+
+        .contact-section h3 {
+            color: white;
+            margin-bottom: var(--space-2);
+        }
+
+        .contact-button {
+            display: inline-block;
+            background: white;
+            color: var(--color-primary);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            margin-top: var(--space-4);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .contact-button:hover {
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--space-6);
+            border-top: 1px solid var(--color-border);
+            margin-top: var(--space-8);
+            color: var(--color-text-light);
+            font-size: var(--text-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <div class="support-header">
+            <img src="{{LOGO_URL}}" alt="Logo" class="document-logo">
+            <h1>{{TITLE}}</h1>
+            <p>{{SUBTITLE}}</p>
+            <div class="support-search">
+                <input type="text" placeholder="Search for help..." id="search-input">
+            </div>
+        </div>
+
+        <!-- Category Navigation -->
+        <div class="category-nav">
+            {{CATEGORY_PILLS}}
+        </div>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq">
+            <h2>Frequently Asked Questions</h2>
+            {{FAQ_CONTENT}}
+        </section>
+
+        <!-- Troubleshooting Section -->
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            {{TROUBLESHOOTING_CONTENT}}
+        </section>
+
+        <!-- Knowledge Base Articles -->
+        <section id="knowledge-base">
+            <h2>Knowledge Base</h2>
+            {{KB_ARTICLES}}
+        </section>
+
+        <!-- Contact Support -->
+        <div class="contact-section">
+            <h3>Still Need Help?</h3>
+            <p>Our support team is here to assist you</p>
+            <a href="{{CONTACT_URL}}" class="contact-button">Contact Support</a>
+        </div>
+
+        <footer class="footer">
+            <p>Generated by Support Doc Agent | {{BRAND_NAME}}</p>
+            <p>Last updated: {{DATE}}</p>
+        </footer>
+    </div>
+
+    <script>
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                question.parentElement.classList.toggle('open');
+            });
+        });
+
+        // Simple search functionality
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.faq-item, .kb-article, .troubleshoot-guide').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+
+<!--
+TEMPLATE VARIABLES:
+{{TITLE}} - Support doc title
+{{SUBTITLE}} - Brief description
+{{LOGO_URL}} - Brand logo URL
+{{DATE}} - Last updated date
+{{CATEGORY_PILLS}} - <span class="category-pill">Getting Started</span>...
+{{FAQ_CONTENT}} - FAQ category blocks (see below)
+{{TROUBLESHOOTING_CONTENT}} - Troubleshooting guides
+{{KB_ARTICLES}} - Knowledge base article cards
+{{CONTACT_URL}} - Support contact link
+{{BRAND_NAME}} - Company/brand name
+
+FAQ CATEGORY TEMPLATE:
+<div class="faq-category">
+    <h3 class="faq-category-title">Category Name</h3>
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>Question text here?</span>
+            <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+            <p>Answer text here.</p>
+        </div>
+    </div>
+</div>
+
+TROUBLESHOOTING TEMPLATE:
+<div class="troubleshoot-guide">
+    <h3 class="troubleshoot-title">Issue: Problem Name</h3>
+    <div class="symptom-box">
+        <h4>Symptom</h4>
+        <p>What the user experiences</p>
+    </div>
+    <div class="causes-list">
+        <h4>Possible Causes</h4>
+        <ol>
+            <li>Cause 1 - Most common</li>
+            <li>Cause 2</li>
+        </ol>
+    </div>
+    <div class="solution-box">
+        <h4>Solution</h4>
+        <ol>
+            <li>Step 1</li>
+            <li>Step 2</li>
+        </ol>
+    </div>
+</div>
+
+KB ARTICLE TEMPLATE:
+<div class="kb-article">
+    <div class="kb-article-header">
+        <h3>Article Title</h3>
+        <div class="kb-article-meta">
+            <span>Category: Getting Started</span>
+            <span>Last Updated: Dec 17, 2025</span>
+        </div>
+    </div>
+    <p>Article content here...</p>
+    <div class="kb-tags">
+        <span class="tag">tag1</span>
+        <span class="tag">tag2</span>
+    </div>
+    <div class="related-articles">
+        <h4>Related Articles</h4>
+        <ul>
+            <li><a href="#">Related article 1</a></li>
+        </ul>
+    </div>
+</div>
+-->

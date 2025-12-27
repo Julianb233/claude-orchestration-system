@@ -1,0 +1,292 @@
+{
+  "version": "2.1",
+  "name": "Enhanced Agent Coordination Protocol",
+  "description": "Defines how agents coordinate, communicate, and work together in swarms",
+  "lastUpdated": "2025-12-17",
+
+  "namedAgentSupport": {
+    "enabled": true,
+    "registry": "/root/.claude/agents/_registry.md",
+    "config": "/root/.claude-flow/agent-coordination/named-agents.json",
+    "format": "PersonName-Role",
+    "lookupAliases": true,
+    "naturalLanguageQueries": true
+  },
+
+  "fileStructure": {
+    "claudeMd": "/root/.claude/CLAUDE.md",
+    "workflows": "/root/.claude/workflows/",
+    "agents": "/root/.claude/agents/",
+    "knowledge": "/root/.claude/knowledge/",
+    "commands": "/root/.claude/commands/",
+    "contextLoading": "/root/.claude-flow/context-loading/",
+    "agentCoordination": "/root/.claude-flow/agent-coordination/",
+    "routingIndex": "/root/.claude/knowledge/system-routing-index.md"
+  },
+
+  "coordinationModes": {
+    "hierarchical": {
+      "description": "Single coordinator manages worker agents",
+      "useWhen": ["complex multi-phase tasks", "tasks requiring approval gates", "sequential dependencies"],
+      "roles": {
+        "coordinator": {
+          "responsibilities": ["task decomposition", "work assignment", "progress tracking", "quality control"],
+          "maxWorkers": 8
+        },
+        "worker": {
+          "responsibilities": ["execute assigned tasks", "report progress", "request help when blocked"],
+          "autonomyLevel": "medium"
+        }
+      }
+    },
+    "mesh": {
+      "description": "All agents communicate peer-to-peer, no central coordinator",
+      "useWhen": ["collaborative research", "parallel independent tasks", "brainstorming", "code review"],
+      "roles": {
+        "peer": {
+          "responsibilities": ["self-assign tasks", "broadcast findings", "request collaboration"],
+          "autonomyLevel": "high"
+        }
+      }
+    },
+    "star": {
+      "description": "Central hub agent with specialized spoke agents",
+      "useWhen": ["multi-domain tasks", "tasks needing different expertise", "API integration work"],
+      "roles": {
+        "hub": {
+          "responsibilities": ["route tasks to specialists", "aggregate results", "resolve conflicts"],
+          "maxSpokes": 6
+        },
+        "spoke": {
+          "responsibilities": ["handle domain-specific work", "report to hub"],
+          "specialization": "required"
+        }
+      }
+    },
+    "ring": {
+      "description": "Agents pass work in sequence, each adding value",
+      "useWhen": ["pipeline processing", "review chains", "iterative refinement"],
+      "roles": {
+        "processor": {
+          "responsibilities": ["process input", "enhance output", "pass to next"],
+          "passDirection": "clockwise"
+        }
+      }
+    },
+    "swarm": {
+      "description": "Self-organizing agents with emergent coordination",
+      "useWhen": ["large-scale exploration", "fuzzy requirements", "creative tasks"],
+      "roles": {
+        "scout": {
+          "responsibilities": ["explore problem space", "identify opportunities"],
+          "spawnRatio": 0.3
+        },
+        "worker": {
+          "responsibilities": ["execute discovered tasks", "report outcomes"],
+          "spawnRatio": 0.5
+        },
+        "reviewer": {
+          "responsibilities": ["validate work", "ensure quality"],
+          "spawnRatio": 0.2
+        }
+      }
+    }
+  },
+
+  "communicationProtocol": {
+    "messageTypes": {
+      "task_assignment": {
+        "priority": "high",
+        "ackRequired": true,
+        "schema": {
+          "taskId": "string",
+          "description": "string",
+          "priority": "critical|high|normal|low",
+          "deadline": "timestamp|null",
+          "dependencies": "array",
+          "expectedOutput": "string"
+        }
+      },
+      "progress_update": {
+        "priority": "normal",
+        "ackRequired": false,
+        "schema": {
+          "taskId": "string",
+          "status": "started|in_progress|blocked|completed|failed",
+          "percentComplete": "number",
+          "currentStep": "string",
+          "blockers": "array",
+          "filesModified": "array"
+        }
+      },
+      "help_request": {
+        "priority": "high",
+        "ackRequired": true,
+        "schema": {
+          "fromAgent": "string",
+          "problemDescription": "string",
+          "neededCapabilities": "array",
+          "urgency": "critical|high|normal"
+        }
+      },
+      "capability_broadcast": {
+        "priority": "low",
+        "ackRequired": false,
+        "schema": {
+          "agentId": "string",
+          "capabilities": "array",
+          "currentLoad": "number",
+          "availability": "available|busy|offline"
+        }
+      },
+      "result_share": {
+        "priority": "normal",
+        "ackRequired": false,
+        "schema": {
+          "taskId": "string",
+          "result": "object",
+          "artifacts": "array",
+          "learnings": "array"
+        }
+      },
+      "consensus_vote": {
+        "priority": "high",
+        "ackRequired": true,
+        "schema": {
+          "proposalId": "string",
+          "vote": "approve|reject|abstain",
+          "reasoning": "string"
+        }
+      }
+    },
+    "channels": {
+      "broadcast": {
+        "namespace": "coordination/broadcast",
+        "ttl": 3600
+      },
+      "direct": {
+        "namespace": "coordination/direct/{agentId}",
+        "ttl": 1800
+      },
+      "task": {
+        "namespace": "coordination/task/{taskId}",
+        "ttl": 86400
+      }
+    },
+    "namedAgentNamespaces": {
+      "agentRegistry": {
+        "namespace": "agent-registry",
+        "purpose": "Active agents list",
+        "ttl": "session"
+      },
+      "agentStatus": {
+        "namespace": "agent-status",
+        "purpose": "Real-time agent status",
+        "ttl": 300
+      },
+      "agentBroadcast": {
+        "namespace": "agent-broadcast",
+        "purpose": "Inter-agent messages",
+        "ttl": 3600
+      },
+      "fileLocks": {
+        "namespace": "file-locks",
+        "purpose": "File lock registry",
+        "ttl": 1800
+      },
+      "migration": {
+        "namespace": "migration",
+        "purpose": "System migration notices",
+        "ttl": 604800
+      }
+    }
+  },
+
+  "consensusMechanisms": {
+    "majority_vote": {
+      "description": "Simple majority decides",
+      "quorum": 0.5,
+      "threshold": 0.51,
+      "useWhen": ["non-critical decisions", "preference choices"]
+    },
+    "supermajority": {
+      "description": "Two-thirds must agree",
+      "quorum": 0.67,
+      "threshold": 0.67,
+      "useWhen": ["architectural decisions", "breaking changes"]
+    },
+    "unanimous": {
+      "description": "All agents must agree",
+      "quorum": 1.0,
+      "threshold": 1.0,
+      "useWhen": ["security-critical changes", "production deployments"]
+    },
+    "expert_override": {
+      "description": "Domain expert has final say",
+      "quorum": 0.3,
+      "expertWeight": 3.0,
+      "useWhen": ["specialized technical decisions"]
+    }
+  },
+
+  "conflictResolution": {
+    "strategies": [
+      {
+        "name": "capability_priority",
+        "description": "Agent with most relevant capability wins",
+        "useWhen": "domain-specific conflicts"
+      },
+      {
+        "name": "seniority",
+        "description": "Coordinator or higher-level agent decides",
+        "useWhen": "hierarchical mode conflicts"
+      },
+      {
+        "name": "vote",
+        "description": "Peer agents vote on resolution",
+        "useWhen": "mesh mode conflicts"
+      },
+      {
+        "name": "merge",
+        "description": "Combine conflicting outputs when possible",
+        "useWhen": "non-exclusive outputs"
+      }
+    ]
+  },
+
+  "loadBalancing": {
+    "algorithms": {
+      "round_robin": {
+        "description": "Distribute tasks evenly in sequence"
+      },
+      "least_loaded": {
+        "description": "Assign to agent with fewest active tasks"
+      },
+      "capability_match": {
+        "description": "Assign to best-matched agent by capabilities"
+      },
+      "affinity": {
+        "description": "Keep related tasks on same agent for context"
+      }
+    },
+    "defaultAlgorithm": "capability_match",
+    "rebalanceThreshold": 0.3
+  },
+
+  "healthMonitoring": {
+    "heartbeatInterval": 30,
+    "staleThreshold": 120,
+    "autoRecovery": {
+      "enabled": true,
+      "maxRetries": 3,
+      "backoffMultiplier": 2
+    },
+    "metrics": [
+      "tasksCompleted",
+      "tasksFailed",
+      "averageResponseTime",
+      "memoryUsage",
+      "errorRate"
+    ]
+  }
+}

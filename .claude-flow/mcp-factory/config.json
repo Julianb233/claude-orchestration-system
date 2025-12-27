@@ -1,0 +1,122 @@
+{
+  "version": "1.0",
+  "description": "MCP Factory Agent Configuration",
+  "discovery": {
+    "notion": {
+      "enabled": true,
+      "database_search_terms": ["API", "credentials", "integration", "webhook"],
+      "scan_interval": "6h"
+    },
+    "web": {
+      "enabled": true,
+      "doc_patterns": [
+        "/api/",
+        "/docs/",
+        "/reference/",
+        "/swagger",
+        "/openapi",
+        "/graphql"
+      ]
+    }
+  },
+  "generation": {
+    "output_dir": "/root/.claude/mcp-servers",
+    "template": "typescript",
+    "auto_install": true,
+    "test_before_deploy": true
+  },
+  "integration": {
+    "settings_file": "/root/.claude/settings.json",
+    "auto_enable": true,
+    "create_skills": true,
+    "update_docs": true
+  },
+  "training": {
+    "store_usage_patterns": true,
+    "namespace": "mcp-training",
+    "auto_suggest": true
+  },
+  "queue": {
+    "file": "/root/.claude-flow/mcp-factory/queue.jsonl",
+    "max_concurrent": 2,
+    "retry_count": 3
+  },
+  "known_apis": {
+    "github": {
+      "docs": "https://docs.github.com/en/rest",
+      "spec": "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json",
+      "auth_type": "bearer"
+    },
+    "notion": {
+      "docs": "https://developers.notion.com/reference",
+      "auth_type": "bearer"
+    },
+    "stripe": {
+      "docs": "https://stripe.com/docs/api",
+      "spec": "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json",
+      "auth_type": "bearer"
+    },
+    "openai": {
+      "docs": "https://platform.openai.com/docs/api-reference",
+      "auth_type": "bearer"
+    },
+    "twilio": {
+      "docs": "https://www.twilio.com/docs/api",
+      "auth_type": "basic"
+    },
+    "sendgrid": {
+      "docs": "https://docs.sendgrid.com/api-reference",
+      "auth_type": "bearer"
+    },
+    "slack": {
+      "docs": "https://api.slack.com/methods",
+      "auth_type": "bearer"
+    },
+    "discord": {
+      "docs": "https://discord.com/developers/docs/reference",
+      "auth_type": "bearer"
+    },
+    "linear": {
+      "docs": "https://developers.linear.app/docs/graphql/working-with-the-graphql-api",
+      "auth_type": "bearer",
+      "type": "graphql"
+    },
+    "vercel": {
+      "docs": "https://vercel.com/docs/rest-api",
+      "auth_type": "bearer"
+    },
+    "supabase": {
+      "docs": "https://supabase.com/docs/reference",
+      "auth_type": "bearer"
+    },
+    "firebase": {
+      "docs": "https://firebase.google.com/docs/reference",
+      "auth_type": "service_account"
+    },
+    "airtable": {
+      "docs": "https://airtable.com/developers/web/api",
+      "auth_type": "bearer"
+    },
+    "monday": {
+      "docs": "https://developer.monday.com/api-reference",
+      "auth_type": "bearer",
+      "type": "graphql"
+    },
+    "hubspot": {
+      "docs": "https://developers.hubspot.com/docs/api/overview",
+      "auth_type": "bearer"
+    },
+    "salesforce": {
+      "docs": "https://developer.salesforce.com/docs/apis",
+      "auth_type": "oauth"
+    },
+    "shopify": {
+      "docs": "https://shopify.dev/docs/api",
+      "auth_type": "bearer"
+    },
+    "zapier": {
+      "docs": "https://platform.zapier.com/docs/zapier-api",
+      "auth_type": "bearer"
+    }
+  }
+}

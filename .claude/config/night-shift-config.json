@@ -1,0 +1,118 @@
+{
+  "nightShift": {
+    "version": "1.0.0",
+    "description": "Autonomous 8-hour unattended operation mode",
+
+    "timing": {
+      "defaultDuration": "8h",
+      "durationMs": 28800000,
+      "maxExtension": "2h",
+      "checkpointIntervalMinutes": 15,
+      "contextCoachIntervalMinutes": 2,
+      "taskCooldownSeconds": 30,
+      "agentHeartbeatSeconds": 30,
+      "staleAgentTimeoutMinutes": 10,
+      "gracefulShutdownMinutes": 30
+    },
+
+    "agents": {
+      "maxConcurrent": 3,
+      "preferredModel": "sonnet",
+      "fallbackModel": "haiku",
+      "permissionMode": "full-bypass",
+      "runInBackground": true,
+      "autoRetry": true,
+      "maxRetries": 3,
+      "retryBackoffMinutes": [1, 2, 3]
+    },
+
+    "context": {
+      "warningThresholdPercent": 60,
+      "emergencyThresholdPercent": 90,
+      "autoCheckpointOnThreshold": true,
+      "autoCompactEnabled": true,
+      "preserveKeyContext": true
+    },
+
+    "tasks": {
+      "priorityOrder": ["critical", "high", "medium", "low"],
+      "respectDependencies": true,
+      "skipFailedDependencies": false,
+      "maxTasksPerQueue": 100
+    },
+
+    "memory": {
+      "namespace": "night-shift",
+      "ttlHours": 9,
+      "checkpointRetention": 5,
+      "resultRetentionHours": 24
+    },
+
+    "notifications": {
+      "enabled": true,
+      "email": "julian@aiacrobatics.com",
+      "notifyOn": ["completion", "criticalError", "emergencyStop"],
+      "summaryReport": true
+    },
+
+    "permissions": {
+      "fileRead": "allow-all",
+      "fileWrite": "allow-all",
+      "bashCommands": "allow-all",
+      "gitOperations": "allow-all",
+      "agentSpawning": "allow-all",
+      "networkRequests": "allow-all",
+      "notionAccess": "allow-all",
+      "githubAccess": "allow-all"
+    },
+
+    "recovery": {
+      "autoResumeFromCheckpoint": true,
+      "preserveTaskQueue": true,
+      "logAllActions": true,
+      "emergencyContactOnCritical": true
+    },
+
+    "pacing": {
+      "slowAndSteady": true,
+      "preventOverload": true,
+      "resourceConservation": true,
+      "adaptiveThrottling": true
+    }
+  },
+
+  "triggers": {
+    "activationPhrases": [
+      "night shift",
+      "going to sleep",
+      "overnight",
+      "work while I sleep",
+      "8 hours",
+      "unattended",
+      "autonomous mode"
+    ],
+    "deactivationPhrases": [
+      "stop night shift",
+      "wake up",
+      "I'm back",
+      "end shift",
+      "stop autonomous"
+    ]
+  },
+
+  "contextCoach": {
+    "enabled": true,
+    "monitoringInterval": 120000,
+    "checkpoints": {
+      "scheduled": 900000,
+      "onThreshold": true,
+      "beforeRiskyOps": true
+    },
+    "alerts": {
+      "contextWarning": 60,
+      "contextCritical": 90,
+      "staleAgents": 3,
+      "taskFailures": 3
+    }
+  }
+}

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Workforce Dashboard</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border: #30363d;
+            --green: #238636;
+            --yellow: #d29922;
+            --red: #da3633;
+            --blue: #58a6ff;
+            --purple: #a371f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.active { background: var(--green); }
+        .status-dot.warning { background: var(--yellow); }
+        .status-dot.error { background: var(--red); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .agent-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .agent-list-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr 1fr 1fr;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .agent-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr 1fr 1fr;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .agent-row:last-child {
+            border-bottom: none;
+        }
+
+        .agent-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .agent-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: rgba(35, 134, 54, 0.2);
+            color: #3fb950;
+        }
+
+        .status-badge.idle {
+            background: rgba(139, 148, 158, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .status-badge.working {
+            background: rgba(88, 166, 255, 0.2);
+            color: var(--blue);
+        }
+
+        .status-badge.blocked {
+            background: rgba(210, 153, 34, 0.2);
+            color: var(--yellow);
+        }
+
+        .status-badge.stale {
+            background: rgba(218, 54, 51, 0.2);
+            color: var(--red);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .swarm-section {
+            margin-top: 24px;
+        }
+
+        .swarm-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .swarm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .swarm-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .phase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .phase-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+        }
+
+        .phase-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .phase-number.completed {
+            background: var(--green);
+        }
+
+        .phase-info {
+            flex: 1;
+        }
+
+        .phase-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .phase-tasks {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .refresh-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--border);
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .timeline {
+            margin-top: 24px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-event {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .timeline-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Agent Workforce Dashboard</h1>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <span class="last-updated">Last updated: <span id="lastUpdated">--</span></span>
+            <button class="refresh-btn" onclick="refreshDashboard()">Refresh</button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Total Agents</span>
+                <div class="status-indicator">
+                    <div class="status-dot active"></div>
+                    <span style="font-size: 12px;">System Active</span>
+                </div>
+            </div>
+            <div class="metric" id="totalAgents">0</div>
+            <div class="metric-label">registered in workforce</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Active</span>
+            </div>
+            <div class="metric" id="activeAgents" style="color: var(--green);">0</div>
+            <div class="metric-label">currently working</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Blocked</span>
+            </div>
+            <div class="metric" id="blockedAgents" style="color: var(--yellow);">0</div>
+            <div class="metric-label">waiting on dependencies</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Stale</span>
+            </div>
+            <div class="metric" id="staleAgents" style="color: var(--red);">0</div>
+            <div class="metric-label">no recent heartbeat</div>
+        </div>
+    </div>
+
+    <div class="agent-list">
+        <div class="agent-list-header">
+            <span>Agent</span>
+            <span>Status</span>
+            <span>Current Task</span>
+            <span>Progress</span>
+            <span>Heartbeat</span>
+        </div>
+        <div id="agentRows">
+            <div class="empty-state">
+                <p>No agents currently registered</p>
+                <p style="font-size: 12px; margin-top: 8px;">Use /workforce-spawn to add agents</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="swarm-section">
+        <div class="swarm-card">
+            <div class="swarm-header">
+                <div>
+                    <div class="swarm-title" id="swarmTitle">No Active Swarm</div>
+                    <div style="font-size: 12px; color: var(--text-secondary);" id="swarmTask">-</div>
+                </div>
+                <span class="status-badge" id="swarmStatus">inactive</span>
+            </div>
+            <div class="phase-list" id="phaseList">
+                <div class="empty-state" style="padding: 20px;">
+                    No active swarm phases
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline">
+        <h3 style="margin-bottom: 16px; font-size: 16px;">Recent Activity</h3>
+        <div id="activityTimeline">
+            <div class="timeline-item">
+                <span class="timeline-time">--</span>
+                <div class="timeline-content">
+                    <div class="timeline-event">Dashboard loaded</div>
+                    <div class="timeline-details">Waiting for agent data...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data structure - in production, this would fetch from Claude Flow memory
+        let dashboardData = {
+            agents: [],
+            swarm: null,
+            activity: []
+        };
+
+        function getInitials(name) {
+            return name.split('-').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = (now - date) / 1000;
+
+            if (diff < 60) return `${Math.floor(diff)}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return date.toLocaleDateString();
+        }
+
+        function renderAgents() {
+            const container = document.getElementById('agentRows');
+
+            if (dashboardData.agents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No agents currently registered</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Use /workforce-spawn to add agents</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = dashboardData.agents.map(agent => `
+                <div class="agent-row">
+                    <div class="agent-name">
+                        <div class="agent-avatar">${getInitials(agent.name)}</div>
+                        <span>${agent.name}</span>
+                    </div>
+                    <span class="status-badge ${agent.status}">${agent.status}</span>
+                    <span>${agent.task || '-'}</span>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${agent.progress || 0}%"></div>
+                        </div>
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-secondary);">${formatTime(agent.lastHeartbeat)}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderSwarm() {
+            const swarm = dashboardData.swarm;
+
+            document.getElementById('swarmTitle').textContent = swarm?.id || 'No Active Swarm';
+            document.getElementById('swarmTask').textContent = swarm?.task || '-';
+            document.getElementById('swarmStatus').textContent = swarm?.status || 'inactive';
+            document.getElementById('swarmStatus').className = `status-badge ${swarm?.status || 'idle'}`;
+
+            const phaseList = document.getElementById('phaseList');
+
+            if (!swarm?.phases?.length) {
+                phaseList.innerHTML = '<div class="empty-state" style="padding: 20px;">No active swarm phases</div>';
+                return;
+            }
+
+            phaseList.innerHTML = swarm.phases.map((phase, i) => `
+                <div class="phase-item">
+                    <div class="phase-number ${phase.status === 'completed' ? 'completed' : ''}">${i + 1}</div>
+                    <div class="phase-info">
+                        <div class="phase-name">${phase.name}</div>
+                        <div class="phase-tasks">${phase.tasks.join(', ')}</div>
+                    </div>
+                    <span class="status-badge ${phase.status === 'in_progress' ? 'working' : phase.status}">${phase.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderMetrics() {
+            const agents = dashboardData.agents;
+            document.getElementById('totalAgents').textContent = agents.length;
+            document.getElementById('activeAgents').textContent = agents.filter(a => a.status === 'working' || a.status === 'active').length;
+            document.getElementById('blockedAgents').textContent = agents.filter(a => a.status === 'blocked').length;
+            document.getElementById('staleAgents').textContent = agents.filter(a => a.status === 'stale').length;
+        }
+
+        function renderActivity() {
+            const container = document.getElementById('activityTimeline');
+
+            if (dashboardData.activity.length === 0) {
+                container.innerHTML = `
+                    <div class="timeline-item">
+                        <span class="timeline-time">${formatTime(new Date())}</span>
+                        <div class="timeline-content">
+                            <div class="timeline-event">Dashboard loaded</div>
+                            <div class="timeline-details">Monitoring workforce activity...</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = dashboardData.activity.slice(0, 10).map(event => `
+                <div class="timeline-item">
+                    <span class="timeline-time">${formatTime(event.timestamp)}</span>
+                    <div class="timeline-content">
+                        <div class="timeline-event">${event.event}</div>
+                        <div class="timeline-details">${event.details}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function refreshDashboard() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+
+            // In production, this would fetch from Claude Flow memory via API
+            // For now, show sample data
+            dashboardData = {
+                agents: [
+                    { name: 'Bubba-Orchestrator', status: 'active', task: 'Portfolio Review', progress: 65, lastHeartbeat: new Date(Date.now() - 30000) },
+                    { name: 'Tyler-TypeScript', status: 'idle', task: null, progress: 0, lastHeartbeat: new Date(Date.now() - 120000) },
+                    { name: 'Marcus-Orchestrator', status: 'working', task: 'Workforce System', progress: 80, lastHeartbeat: new Date(Date.now() - 15000) }
+                ],
+                swarm: {
+                    id: 'swarm_workforce_1734441600',
+                    task: 'Dynamic Agent Workforce System',
+                    status: 'active',
+                    phases: [
+                        { name: 'Phase 1-2', tasks: ['Memory schema', 'Heartbeat workflow'], status: 'completed' },
+                        { name: 'Phase 3-5', tasks: ['Check-in', 'Disconnection', 'Reconnection'], status: 'completed' },
+                        { name: 'Phase 6-7', tasks: ['Commands', 'HTML Dashboard'], status: 'in_progress' }
+                    ]
+                },
+                activity: [
+                    { timestamp: new Date(Date.now() - 60000), event: 'Agent spawned', details: 'Marcus-Orchestrator joined workforce' },
+                    { timestamp: new Date(Date.now() - 300000), event: 'Task completed', details: 'Phase 3-5 finished by general-purpose agent' },
+                    { timestamp: new Date(Date.now() - 600000), event: 'Swarm started', details: 'Dynamic Agent Workforce System initiated' }
+                ]
+            };
+
+            renderMetrics();
+            renderAgents();
+            renderSwarm();
+            renderActivity();
+        }
+
+        // Initial load
+        refreshDashboard();
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshDashboard, 30000);
+    </script>
+</body>
+</html>

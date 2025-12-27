@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Preview - {{DATE}}</title>
+    <style>
+        /* Reset & Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 32px 0;
+            margin-bottom: 40px;
+            color: white;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* Card Wrapper */
+        .card-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .platform-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .platform-label.linkedin { background: #0077B5; color: white; }
+        .platform-label.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .platform-label.twitter { background: #000; color: white; }
+
+        .scheduled-time {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ==================== LINKEDIN CARD ==================== */
+        .linkedin-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+        .linkedin-header {
+            display: flex;
+            padding: 12px 16px;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .linkedin-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0077B5 0%, #00A0DC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .linkedin-meta { flex: 1; }
+        .linkedin-name {
+            font-weight: 600;
+            color: rgba(0,0,0,0.9);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .linkedin-badge {
+            background: #0077B5;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .linkedin-headline {
+            font-size: 12px;
+            color: rgba(0,0,0,0.6);
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+        .linkedin-time {
+            font-size: 12px;
+            color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .linkedin-more {
+            color: rgba(0,0,0,0.6);
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .linkedin-content {
+            padding: 0 16px 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(0,0,0,0.9);
+            white-space: pre-line;
+        }
+        .linkedin-content .see-more {
+            color: rgba(0,0,0,0.6);
+            cursor: pointer;
+        }
+        .linkedin-hashtags {
+            color: #0077B5;
+            font-weight: 600;
+        }
+        .linkedin-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            background: #f3f6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            min-height: 200px;
+        }
+        .linkedin-stats {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(0,0,0,0.6);
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .linkedin-reactions {
+            display: flex;
+        }
+        .linkedin-reaction {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-left: -4px;
+            border: 2px solid white;
+        }
+        .linkedin-reaction.like { background: #0077B5; }
+        .linkedin-reaction.celebrate { background: #44712e; }
+        .linkedin-reaction.love { background: #df704d; }
+        .linkedin-actions {
+            display: flex;
+            padding: 4px 8px;
+        }
+        .linkedin-action {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            color: rgba(0,0,0,0.6);
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .linkedin-action:hover { background: rgba(0,0,0,0.08); }
+        .linkedin-action svg { width: 20px; height: 20px; }
+
+        /* ==================== INSTAGRAM CARD ==================== */
+        .instagram-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dbdbdb;
+            overflow: hidden;
+        }
+        .instagram-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            gap: 12px;
+        }
+        .instagram-avatar-ring {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 2px;
+            flex-shrink: 0;
+        }
+        .instagram-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+        }
+        .instagram-username {
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+            flex: 1;
+        }
+        .instagram-verified {
+            color: #0095f6;
+            margin-left: 4px;
+        }
+        .instagram-more {
+            color: #262626;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .instagram-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: linear-gradient(135deg, #fafafa 0%, #e8e8e8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e8e;
+            font-size: 14px;
+        }
+        .instagram-actions {
+            display: flex;
+            padding: 12px 16px;
+            gap: 16px;
+        }
+        .instagram-action {
+            font-size: 24px;
+            cursor: pointer;
+            color: #262626;
+        }
+        .instagram-action.bookmark { margin-left: auto; }
+        .instagram-likes {
+            padding: 0 16px 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+        }
+        .instagram-caption {
+            padding: 0 16px 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #262626;
+        }
+        .instagram-caption strong { font-weight: 600; }
+        .instagram-hashtags { color: #00376b; }
+        .instagram-time {
+            padding: 0 16px 12px;
+            font-size: 10px;
+            color: #8e8e8e;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        /* ==================== TWITTER/X CARD ==================== */
+        .twitter-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #eff3f4;
+            padding: 16px;
+        }
+        .twitter-header {
+            display: flex;
+            gap: 12px;
+        }
+        .twitter-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1d9bf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .twitter-meta { flex: 1; }
+        .twitter-name-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .twitter-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #0f1419;
+        }
+        .twitter-verified {
+            color: #1d9bf0;
+            font-size: 16px;
+        }
+        .twitter-handle {
+            font-size: 15px;
+            color: #536471;
+        }
+        .twitter-dot { color: #536471; }
+        .twitter-time-inline {
+            font-size: 15px;
+            color: #536471;
+        }
+        .twitter-more {
+            margin-left: auto;
+            color: #536471;
+            cursor: pointer;
+        }
+        .twitter-content {
+            margin-top: 4px;
+            font-size: 15px;
+            line-height: 1.4;
+            color: #0f1419;
+            white-space: pre-wrap;
+        }
+        .twitter-hashtag { color: #1d9bf0; }
+        .twitter-mention { color: #1d9bf0; }
+        .twitter-image {
+            margin-top: 12px;
+            border-radius: 16px;
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            background: #f7f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #536471;
+            font-size: 14px;
+            min-height: 180px;
+        }
+        .twitter-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            max-width: 425px;
+        }
+        .twitter-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #536471;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .twitter-action:hover { background: rgba(29,155,240,0.1); color: #1d9bf0; }
+        .twitter-action svg { width: 18px; height: 18px; }
+
+        /* ==================== CALENDAR VIEW ==================== */
+        .calendar-section {
+            margin-top: 48px;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .calendar-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f1419;
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+        .calendar-nav button {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .calendar-nav button:hover { background: #f5f5f5; }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .calendar-day-header {
+            background: #f5f5f5;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .calendar-day {
+            background: white;
+            min-height: 100px;
+            padding: 8px;
+        }
+        .calendar-day.today { background: #f0f7ff; }
+        .calendar-day.other-month { background: #fafafa; }
+        .calendar-date {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .calendar-day.today .calendar-date {
+            color: #1d9bf0;
+            font-weight: 700;
+        }
+        .calendar-post {
+            font-size: 11px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        .calendar-post:hover { filter: brightness(0.95); }
+        .calendar-post.linkedin { background: #e8f4fc; color: #0077b5; }
+        .calendar-post.instagram { background: #ffeef5; color: #c13584; }
+        .calendar-post.twitter { background: #e8f6fd; color: #1d9bf0; }
+        .calendar-post.draft {
+            border: 1px dashed currentColor;
+            background: transparent;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .status-badge.draft { background: #fff3cd; color: #856404; }
+        .status-badge.scheduled { background: #d4edda; color: #155724; }
+        .status-badge.published { background: #cce5ff; color: #004085; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .posts-grid { grid-template-columns: 1fr; }
+            .calendar-grid { grid-template-columns: repeat(7, 1fr); font-size: 10px; }
+            .calendar-day { min-height: 60px; padding: 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Social Media Preview</h1>
+            <p>Generated: {{TIMESTAMP}}</p>
+        </div>
+
+        <div class="posts-grid">
+            {{POSTS}}
+        </div>
+
+        {{CALENDAR}}
+    </div>
+</body>
+</html>
+
+<!--
+TEMPLATE USAGE:
+
+Replace {{DATE}} with current date
+Replace {{TIMESTAMP}} with generation timestamp
+Replace {{POSTS}} with generated platform cards
+Replace {{CALENDAR}} with optional calendar HTML
+
+LINKEDIN CARD TEMPLATE:
+<div class="card-wrapper">
+    <span class="platform-label linkedin">LinkedIn</span>
+    <span class="status-badge draft">Draft</span>
+    <div class="scheduled-time">Scheduled: Jan 15, 2025 at 10:00 AM</div>
+    <div class="linkedin-card">
+        <div class="linkedin-header">
+            <div class="linkedin-avatar">JD</div>
+            <div class="linkedin-meta">
+                <div class="linkedin-name">Julian Daoud <span class="linkedin-badge">1st</span></div>
+                <div class="linkedin-headline">AI & Automation Expert | Founder</div>
+                <div class="linkedin-time">2h</div>
+            </div>
+            <div class="linkedin-more">...</div>
+        </div>
+        <div class="linkedin-content">
+            {{CONTENT}}
+
+            <span class="linkedin-hashtags">#AI #Automation #Tech</span>
+        </div>
+        <div class="linkedin-image">Image Preview</div>
+        <div class="linkedin-stats">
+            <div class="linkedin-reactions">
+                <div class="linkedin-reaction like"></div>
+                <div class="linkedin-reaction celebrate"></div>
+            </div>
+            128 reactions
+        </div>
+        <div class="linkedin-actions">
+            <div class="linkedin-action">Like</div>
+            <div class="linkedin-action">Comment</div>
+            <div class="linkedin-action">Repost</div>
+            <div class="linkedin-action">Send</div>
+        </div>
+    </div>
+</div>
+
+INSTAGRAM CARD TEMPLATE:
+<div class="card-wrapper">
+    <span class="platform-label instagram">Instagram</span>
+    <div class="instagram-card">
+        <div class="instagram-header">
+            <div class="instagram-avatar-ring">
+                <div class="instagram-avatar">JD</div>
+            </div>
+            <div class="instagram-username">juliandaoud</div>
+            <div class="instagram-more">...</div>
+        </div>
+        <div class="instagram-image">Image Preview</div>
+        <div class="instagram-actions">
+            <span class="instagram-action">heart</span>
+            <span class="instagram-action">comment</span>
+            <span class="instagram-action">share</span>
+            <span class="instagram-action bookmark">bookmark</span>
+        </div>
+        <div class="instagram-likes">1,234 likes</div>
+        <div class="instagram-caption">
+            <strong>juliandaoud</strong> {{CONTENT}}
+            <span class="instagram-hashtags">#AI #Tech #Innovation</span>
+        </div>
+        <div class="instagram-time">2 hours ago</div>
+    </div>
+</div>
+
+TWITTER/X CARD TEMPLATE:
+<div class="card-wrapper">
+    <span class="platform-label twitter">Twitter/X</span>
+    <div class="twitter-card">
+        <div class="twitter-header">
+            <div class="twitter-avatar">JD</div>
+            <div class="twitter-meta">
+                <div class="twitter-name-row">
+                    <span class="twitter-name">Julian Daoud</span>
+                    <span class="twitter-verified">verified</span>
+                    <span class="twitter-handle">@juliandaoud</span>
+                    <span class="twitter-dot">.</span>
+                    <span class="twitter-time-inline">2h</span>
+                </div>
+            </div>
+            <div class="twitter-more">...</div>
+        </div>
+        <div class="twitter-content">
+            {{CONTENT}}
+            <span class="twitter-hashtag">#AI</span>
+        </div>
+        <div class="twitter-image">Image Preview</div>
+        <div class="twitter-actions">
+            <div class="twitter-action">reply</div>
+            <div class="twitter-action">retweet</div>
+            <div class="twitter-action">like</div>
+            <div class="twitter-action">views</div>
+            <div class="twitter-action">share</div>
+        </div>
+    </div>
+</div>
+-->

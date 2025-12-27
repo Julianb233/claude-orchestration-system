@@ -1,0 +1,14 @@
+{
+  "id": "notif_1766003526",
+  "type": "swarm_started",
+  "task": "Workforce System",
+  "message": "Swarm deployed: 3 agents working on Dynamic Agent Workforce System (7 phases). Agent 1: Memory+Heartbeat, Agent 2: Check-in+Disconnection+Reconnection, Agent 3: Commands+Dashboard",
+  "priority": "normal",
+  "timestamp": "2025-12-17T20:32:06Z",
+  "status": "pending",
+  "channels": {
+    "memory": true,
+    "email": false,
+    "slack": false
+  }
+}

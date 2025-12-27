@@ -1,0 +1,235 @@
+{
+  "version": "2.0",
+  "description": "Autonomous context loading trigger definitions with hub-first loading",
+
+  "hubFirst": {
+    "enabled": true,
+    "file": "knowledge/system-hub.md",
+    "description": "Always load system-hub.md first for routing",
+    "maxTokens": 500
+  },
+
+  "triggers": [
+    {
+      "id": "system-hub-always",
+      "name": "System Hub (Always First)",
+      "condition": "always",
+      "loads": ["knowledge/system-hub.md"],
+      "priority": "base",
+      "auto": true,
+      "order": 0
+    },
+    {
+      "id": "session-start",
+      "name": "Session Startup",
+      "condition": "session_new",
+      "loads": ["workflows/session-startup.md"],
+      "priority": "critical",
+      "auto": true,
+      "order": 1
+    },
+    {
+      "id": "project-detected",
+      "name": "Project Directory",
+      "condition": "file_exists:.claude-state.json|package.json|Cargo.toml|pyproject.toml",
+      "loads": ["workflows/state-management.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "julian-stack-project",
+      "name": "Julian Stack Project",
+      "condition": "file_exists:drizzle.config.ts|file_contains:package.json:trpc",
+      "loads": ["knowledge/julian-stack.md#web-stack", "knowledge/julian-stack.md#code-patterns"],
+      "priority": "base",
+      "auto": true
+    },
+    {
+      "id": "multi-agent-task",
+      "name": "Multi-Agent Workflow",
+      "condition": "intent:spawn_agents|swarm_init|hive",
+      "loads": ["workflows/recovery-protocol.md", "knowledge/swarm-orchestration-guide.md"],
+      "priority": "critical",
+      "auto": true
+    },
+    {
+      "id": "hive-commands",
+      "name": "Hive Operations",
+      "condition": "command:/cf-hive-*",
+      "loads": ["workflows/hive-coordination.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "action-completed",
+      "name": "Action Complete",
+      "condition": "action_complete:edit|test|build|commit",
+      "loads": ["workflows/proactive-actions.md"],
+      "priority": "medium",
+      "auto": true
+    },
+    {
+      "id": "bubba-orchestrator",
+      "name": "Bubba Master Orchestrator",
+      "condition": "mentions:Bubba|keywords:set and forget|handle this|plan this|coordinate this",
+      "loads": ["agents/bubba-orchestrator.md", "agents/_registry.md"],
+      "priority": "critical",
+      "auto": true,
+      "description": "Autonomous strategic planner - set and forget mode"
+    },
+    {
+      "id": "webby-webcloner",
+      "name": "Webby Website Cloner",
+      "condition": "mentions:Webby|keywords:clone website|duplicate website|clone site|copy website|recreate website",
+      "loads": ["agents/webby-webcloner.md", "agents/_registry.md"],
+      "priority": "high",
+      "auto": true,
+      "description": "Website analysis and duplication - exact clone or rebranded"
+    },
+    {
+      "id": "paige-publisher",
+      "name": "Paige Web Publisher",
+      "condition": "mentions:Paige|keywords:subdomain|cloudflare|pages deploy|create subdomain|publish site|deploy site",
+      "loads": ["agents/paige-publisher.md", "agents/_registry.md"],
+      "priority": "high",
+      "auto": true,
+      "description": "Web publishing, subdomain management, Cloudflare Pages deployment"
+    },
+    {
+      "id": "agent-name-mentioned",
+      "name": "Named Agent Request",
+      "condition": "mentions:Bubba|Marcus|Tyler|Rex|Diana|Archie|Tessa|Petra|Helena|Sage|Otto|Peter|Dana|Fiona|Adam|Kirk|Morgan|Sophie|Scarlett|Gina|Bella|Cassie|Derek|Webby|Paige",
+      "loads": ["agents/_registry.md"],
+      "priority": "high",
+      "auto": true,
+      "lookup_agent": true
+    },
+    {
+      "id": "marketing-task",
+      "name": "Marketing Work",
+      "condition": "keywords:campaign|ad copy|marketing|social media|content",
+      "loads": ["knowledge/marketing-orchestrator.md"],
+      "priority": "task",
+      "auto": true
+    },
+    {
+      "id": "test-failure",
+      "name": "Test Failure",
+      "condition": "error:FAIL.*\\.test\\.|jest|pytest|cargo test",
+      "loads": ["agents/test-automator.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "typescript-error",
+      "name": "TypeScript Error",
+      "condition": "error:TS\\d{4}:|Type.*is not assignable",
+      "loads": ["agents/typescript-pro.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "database-error",
+      "name": "Database Error",
+      "condition": "error:Prisma|Drizzle|relation.*does not exist",
+      "loads": ["knowledge/julian-stack.md#database"],
+      "priority": "critical",
+      "auto": true
+    },
+    {
+      "id": "deploy-task",
+      "name": "Deployment",
+      "condition": "keywords:deploy|vercel|production|release",
+      "loads": ["knowledge/julian-stack.md#deployment"],
+      "priority": "task",
+      "auto": true
+    },
+    {
+      "id": "integration-task",
+      "name": "MCP Integration",
+      "condition": "keywords:integrate|MCP|API|webhook",
+      "loads": ["knowledge/mcp-patterns.md"],
+      "priority": "task",
+      "auto": true
+    },
+    {
+      "id": "error-general",
+      "name": "General Error",
+      "condition": "error:Error|Exception|ENOENT|EACCES|ECONNREFUSED",
+      "loads": ["knowledge/error-remediation-map.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "rate-limit",
+      "name": "Rate Limit Hit",
+      "condition": "error:429|Too Many Requests|rate limit",
+      "loads": ["workflows/rate-limit-handler.md"],
+      "priority": "critical",
+      "auto": true
+    },
+    {
+      "id": "orchestration-task",
+      "name": "Orchestration Request",
+      "condition": "keywords:orchestrate|coordinate|multi-agent|parallel agents",
+      "loads": ["workflows/orchestrator-core.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "agent-spawn",
+      "name": "Agent Spawning",
+      "condition": "intent:spawn|invoke|have.*implement|ask.*to",
+      "loads": ["workflows/agent-invocation.md"],
+      "priority": "high",
+      "auto": true
+    },
+    {
+      "id": "context-coach",
+      "name": "Context Health Monitor",
+      "condition": "session_new|action:spawn_agent|keywords:context freeze|context full",
+      "loads": ["agents/context-coach.md", "workflows/context-monitoring.md"],
+      "priority": "critical",
+      "auto": true,
+      "description": "Cassie monitors context health to prevent freezing"
+    },
+    {
+      "id": "deliverables-publish",
+      "name": "Deliverables Publishing",
+      "condition": "keywords:publish deliverable|client portal|Derek publish",
+      "loads": ["agents/deliverables-publisher.md"],
+      "priority": "task",
+      "auto": true,
+      "description": "Derek publishes to client deliverables portal"
+    },
+    {
+      "id": "compaction-recovery",
+      "name": "Compaction Recovery",
+      "condition": "event:compaction_failed|file_exists:.recovery-pending|keywords:Bubba I'm back|auto-recovery",
+      "loads": ["workflows/auto-recovery.md"],
+      "priority": "critical",
+      "auto": true,
+      "description": "Auto-recover from context compaction failures",
+      "action": {
+        "type": "execute_hook",
+        "hook": "/root/.claude/hooks/context-recovery.sh",
+        "restore_prompt": "Bubba, I'm back - auto-recovery activated"
+      }
+    }
+  ],
+
+  "contextBudget": {
+    "totalTokens": 4000,
+    "baseReserved": 500,
+    "projectMax": 1000,
+    "taskMax": 2000,
+    "dynamicMax": 500
+  },
+
+  "loadingBehavior": {
+    "silent": true,
+    "announceOnLoad": false,
+    "cacheLoaded": true,
+    "cacheTTL": 3600
+  }
+}

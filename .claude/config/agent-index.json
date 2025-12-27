@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "description": "SINGLE SOURCE OF TRUTH for agent lookup - eliminates redundant agent discovery",
+  "lastUpdated": "2025-12-18",
+
+  "agentsByCapability": {
+    "typescript": ["Tyler-TypeScript", "Fiona-Frontend"],
+    "javascript": ["Tyler-TypeScript", "Fiona-Frontend"],
+    "python": ["Peter-Python"],
+    "database": ["Dana-Database"],
+    "security": ["Sage-Security"],
+    "testing": ["Tessa-Tester"],
+    "deployment": ["Petra-DevOps", "Kirk-Kubernetes"],
+    "architecture": ["Archie-Architect"],
+    "debugging": ["Diana-Debugger"],
+    "review": ["Rex-Reviewer"],
+    "orchestration": ["Marcus-Orchestrator", "Bubba-Orchestrator"],
+    "frontend": ["Fiona-Frontend", "Tyler-TypeScript"],
+    "api": ["Adam-API"],
+    "marketing": ["Morgan-Marketing"],
+    "social": ["Sophie-Social"],
+    "scripts": ["Scarlett-Script"],
+    "documentation": ["Gina-Guide"],
+    "branding": ["Bella-Branding"],
+    "context": ["Helena-Memory", "Cassie-ContextCoach"],
+    "monitoring": ["Otto-Observer"],
+    "website-clone": ["Webby-WebCloner"],
+    "publishing": ["Paige-Publisher", "Derek-Deliverables"]
+  },
+
+  "agentsByTier": {
+    "0": {
+      "Bubba-Orchestrator": {
+        "role": "Master orchestrator",
+        "baseAgent": "workflow-orchestrator",
+        "file": "agents/bubba-orchestrator.md",
+        "permissions": "full-bypass",
+        "triggers": ["Bubba", "set and forget", "handle this"]
+      }
+    },
+    "1": {
+      "Marcus-Orchestrator": {
+        "role": "Coordination",
+        "baseAgent": "workflow-orchestrator",
+        "file": "agents/marcus-orchestrator.md",
+        "triggers": ["Marcus", "coordinate"]
+      },
+      "Tyler-TypeScript": {
+        "role": "TypeScript/JavaScript",
+        "baseAgent": "typescript-pro",
+        "file": "agents/tyler-typescript.md",
+        "triggers": ["Tyler", "typescript", "javascript"]
+      },
+      "Rex-Reviewer": {
+        "role": "Code review",
+        "baseAgent": "code-reviewer",
+        "file": "agents/rex-reviewer.md",
+        "triggers": ["Rex", "review"]
+      },
+      "Diana-Debugger": {
+        "role": "Debugging",
+        "baseAgent": "debugger",
+        "file": "agents/diana-debugger.md",
+        "triggers": ["Diana", "debug", "investigate"]
+      },
+      "Archie-Architect": {
+        "role": "Architecture",
+        "baseAgent": "backend-architect",
+        "file": "agents/archie-architect.md",
+        "triggers": ["Archie", "architecture", "design"]
+      }
+    },
+    "2": {
+      "Tessa-Tester": {
+        "role": "Testing",
+        "baseAgent": "test-automator",
+        "triggers": ["Tessa", "test"]
+      },
+      "Petra-DevOps": {
+        "role": "Deployment",
+        "baseAgent": "deployment-engineer",
+        "triggers": ["Petra", "deploy"]
+      },
+      "Helena-Memory": {
+        "role": "Context/Memory",
+        "baseAgent": "context-manager",
+        "triggers": ["Helena", "remember", "recall"]
+      },
+      "Sage-Security": {
+        "role": "Security",
+        "baseAgent": "security-auditor",
+        "triggers": ["Sage", "security", "audit"]
+      },
+      "Otto-Observer": {
+        "role": "Monitoring",
+        "baseAgent": "observability-engineer",
+        "triggers": ["Otto", "monitor", "observe"]
+      }
+    },
+    "3": {
+      "Peter-Python": {"role": "Python", "baseAgent": "python-pro"},
+      "Dana-Database": {"role": "Database", "baseAgent": "database-architect"},
+      "Fiona-Frontend": {"role": "Frontend", "baseAgent": "frontend-developer"},
+      "Adam-API": {"role": "API Documentation", "baseAgent": "api-documenter"},
+      "Kirk-Kubernetes": {"role": "Kubernetes", "baseAgent": "kubernetes-architect"},
+      "Cassie-ContextCoach": {"role": "Context Health", "baseAgent": "context-manager"}
+    },
+    "4": {
+      "Morgan-Marketing": {"role": "Marketing", "baseAgent": "content-marketer"},
+      "Sophie-Social": {"role": "Social Media", "baseAgent": "social-media-agent"},
+      "Scarlett-Script": {"role": "Script Writing", "baseAgent": "prompt-engineer"},
+      "Gina-Guide": {"role": "Documentation", "baseAgent": "how-to-guide-agent"},
+      "Bella-Branding": {"role": "Branding", "baseAgent": "branding-agent"},
+      "Webby-WebCloner": {"role": "Website Clone", "baseAgent": "frontend-developer"},
+      "Paige-Publisher": {"role": "Publishing", "baseAgent": "deployment-engineer"},
+      "Derek-Deliverables": {"role": "Client Deliverables", "baseAgent": "deliverables-publisher"}
+    }
+  },
+
+  "quickLookup": {
+    "Bubba": "Bubba-Orchestrator",
+    "Marcus": "Marcus-Orchestrator",
+    "Tyler": "Tyler-TypeScript",
+    "Rex": "Rex-Reviewer",
+    "Diana": "Diana-Debugger",
+    "Archie": "Archie-Architect",
+    "Tessa": "Tessa-Tester",
+    "Petra": "Petra-DevOps",
+    "Helena": "Helena-Memory",
+    "Sage": "Sage-Security",
+    "Otto": "Otto-Observer",
+    "Peter": "Peter-Python",
+    "Dana": "Dana-Database",
+    "Fiona": "Fiona-Frontend",
+    "Adam": "Adam-API",
+    "Kirk": "Kirk-Kubernetes",
+    "Morgan": "Morgan-Marketing",
+    "Sophie": "Sophie-Social",
+    "Scarlett": "Scarlett-Script",
+    "Gina": "Gina-Guide",
+    "Bella": "Bella-Branding",
+    "Cassie": "Cassie-ContextCoach",
+    "Webby": "Webby-WebCloner",
+    "Paige": "Paige-Publisher",
+    "Derek": "Derek-Deliverables"
+  },
+
+  "taskMapping": {
+    "typescript": "Tyler-TypeScript",
+    "javascript": "Tyler-TypeScript",
+    "frontend": "Fiona-Frontend",
+    "react": "Fiona-Frontend",
+    "api": "Adam-API",
+    "database": "Dana-Database",
+    "sql": "Dana-Database",
+    "deploy": "Petra-DevOps",
+    "kubernetes": "Kirk-Kubernetes",
+    "test": "Tessa-Tester",
+    "review": "Rex-Reviewer",
+    "debug": "Diana-Debugger",
+    "security": "Sage-Security",
+    "monitor": "Otto-Observer",
+    "marketing": "Morgan-Marketing",
+    "social": "Sophie-Social",
+    "script": "Scarlett-Script",
+    "docs": "Gina-Guide",
+    "brand": "Bella-Branding",
+    "clone": "Webby-WebCloner",
+    "publish": "Derek-Deliverables"
+  },
+
+  "permissions": {
+    "fullBypass": ["Bubba-Orchestrator"],
+    "autoApprove": [
+      "Tyler-TypeScript", "Rex-Reviewer", "Diana-Debugger",
+      "Tessa-Tester", "Petra-DevOps", "Archie-Architect"
+    ],
+    "requireConfirm": []
+  }
+}

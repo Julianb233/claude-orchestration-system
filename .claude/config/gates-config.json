@@ -1,0 +1,189 @@
+{
+  "version": "1.0",
+  "description": "Quality gates and checkpoint configuration",
+
+  "gates": {
+    "preflight": {
+      "name": "Pre-flight Check",
+      "description": "Validate requirements before starting",
+      "enabled": true,
+      "required": true,
+      "checks": [
+        "dependencies_installed",
+        "environment_configured",
+        "git_clean_state",
+        "required_files_exist"
+      ],
+      "onFailure": "abort"
+    },
+    "post_api": {
+      "name": "API Validation Gate",
+      "description": "Ensure API endpoints work before frontend",
+      "enabled": true,
+      "required": true,
+      "checks": [
+        "api_tests_pass",
+        "types_compile",
+        "no_lint_errors"
+      ],
+      "onFailure": "block"
+    },
+    "post_frontend": {
+      "name": "Frontend Validation Gate",
+      "description": "Ensure frontend builds and tests pass",
+      "enabled": true,
+      "required": true,
+      "checks": [
+        "frontend_builds",
+        "component_tests_pass",
+        "no_accessibility_errors"
+      ],
+      "onFailure": "block"
+    },
+    "pre_review": {
+      "name": "Pre-Review Gate",
+      "description": "Quality checks before code review",
+      "enabled": true,
+      "required": true,
+      "checks": [
+        "all_tests_pass",
+        "code_coverage_met",
+        "no_security_issues"
+      ],
+      "onFailure": "block"
+    },
+    "pre_deploy": {
+      "name": "Pre-Deploy Gate",
+      "description": "Final checks before deployment",
+      "enabled": true,
+      "required": true,
+      "checks": [
+        "staging_tests_pass",
+        "performance_acceptable",
+        "review_approved"
+      ],
+      "onFailure": "block"
+    }
+  },
+
+  "checks": {
+    "dependencies_installed": {
+      "command": "npm ci || pnpm install --frozen-lockfile",
+      "description": "Install dependencies",
+      "timeout": 120000
+    },
+    "environment_configured": {
+      "command": "test -f .env || test -f .env.local",
+      "description": "Environment file exists"
+    },
+    "git_clean_state": {
+      "command": "git status --porcelain | head -1 | wc -l",
+      "expected": "0",
+      "description": "No uncommitted changes"
+    },
+    "required_files_exist": {
+      "command": "test -f package.json",
+      "description": "Package.json exists"
+    },
+    "api_tests_pass": {
+      "command": "npm run test:api || pnpm test:api",
+      "description": "API tests pass",
+      "timeout": 300000
+    },
+    "types_compile": {
+      "command": "npx tsc --noEmit",
+      "description": "TypeScript compiles without errors",
+      "timeout": 120000
+    },
+    "no_lint_errors": {
+      "command": "npm run lint || pnpm lint",
+      "description": "No linting errors",
+      "timeout": 60000
+    },
+    "frontend_builds": {
+      "command": "npm run build || pnpm build",
+      "description": "Frontend builds successfully",
+      "timeout": 300000
+    },
+    "component_tests_pass": {
+      "command": "npm run test:components || pnpm test:components",
+      "description": "Component tests pass",
+      "timeout": 300000
+    },
+    "no_accessibility_errors": {
+      "command": "npm run test:a11y || echo 'No a11y tests configured'",
+      "description": "Accessibility tests pass",
+      "optional": true
+    },
+    "all_tests_pass": {
+      "command": "npm test || pnpm test",
+      "description": "All tests pass",
+      "timeout": 600000
+    },
+    "code_coverage_met": {
+      "command": "npm run test:coverage -- --coverageThreshold='{\"global\":{\"lines\":80}}'",
+      "description": "Code coverage meets threshold",
+      "optional": true
+    },
+    "no_security_issues": {
+      "command": "npm audit --audit-level=high || pnpm audit --audit-level=high",
+      "description": "No high/critical security vulnerabilities",
+      "timeout": 60000
+    },
+    "staging_tests_pass": {
+      "command": "npm run test:e2e:staging || echo 'No staging tests'",
+      "description": "E2E tests pass on staging",
+      "optional": true
+    },
+    "performance_acceptable": {
+      "command": "npm run test:perf || echo 'No perf tests'",
+      "description": "Performance tests pass",
+      "optional": true
+    },
+    "review_approved": {
+      "manual": true,
+      "description": "Code review approved by Rex-Reviewer"
+    }
+  },
+
+  "checkpoints": {
+    "enabled": true,
+    "storage": "git",
+    "prefix": "bubba-checkpoint",
+    "maxCheckpoints": 10,
+    "autoCleanup": true,
+    "cleanupAfter": 86400000
+  },
+
+  "rollback": {
+    "enabled": true,
+    "confirmRequired": false,
+    "notifyOnRollback": true,
+    "preserveLogs": true
+  },
+
+  "thresholds": {
+    "maxGateFailures": 3,
+    "gateTimeout": 600000,
+    "checkRetries": 2,
+    "retryDelay": 5000
+  },
+
+  "notifications": {
+    "onGatePassed": {
+      "slack": true,
+      "email": false,
+      "sms": false
+    },
+    "onGateFailed": {
+      "slack": true,
+      "email": true,
+      "sms": true
+    },
+    "onRollback": {
+      "slack": true,
+      "email": true,
+      "sms": false
+    }
+  }
+}

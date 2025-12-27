@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{CLIENT_NAME}} - Deliverables</title>
+    <link rel="stylesheet" href="../../assets/style.css">
+    <style>
+        /* Client-specific branding overrides */
+        :root {
+            --client-primary: {{PRIMARY_COLOR}};
+            --client-secondary: {{SECONDARY_COLOR}};
+            --client-accent: {{ACCENT_COLOR}};
+        }
+        header {
+            background: linear-gradient(135deg, var(--client-primary), var(--client-secondary));
+        }
+        .client-card:hover, .deliverable-card .file-link:hover {
+            background: var(--client-primary);
+        }
+        .back-link, .deliverable-card .file-link {
+            color: var(--client-primary);
+        }
+        .deliverable-item .badge {
+            background: var(--client-primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{CLIENT_NAME}}</h1>
+        <p class="subtitle">Your Deliverables</p>
+    </header>
+
+    <main>
+        <a href="../../index.html" class="back-link">&larr; Back to all clients</a>
+
+        <div class="client-header">
+            {{CLIENT_LOGO}}
+            <div>
+                <h2>{{CLIENT_NAME}}</h2>
+                <p>{{DELIVERABLE_COUNT}} deliverables</p>
+            </div>
+        </div>
+
+        <section class="deliverables-list">
+            {{DELIVERABLES_LIST}}
+        </section>
+    </main>
+
+    <footer>
+        <p>Powered by AI Acrobatics Orchestra</p>
+        <p class="updated">Portal: <a href="../../index.html" style="color: var(--client-primary);">View All Clients</a></p>
+    </footer>
+</body>
+</html>

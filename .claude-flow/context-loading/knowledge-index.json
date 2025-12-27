@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "description": "Index of knowledge files for section-level loading",
+  "lastIndexed": "2025-12-17",
+
+  "files": {
+    "julian-stack.md": {
+      "path": "/root/.claude/knowledge/julian-stack.md",
+      "totalTokens": 3500,
+      "sections": {
+        "overview": {"lines": [1, 25], "tokens": 150, "tags": ["intro", "stack"]},
+        "web-stack": {"lines": [26, 120], "tokens": 800, "tags": ["react", "trpc", "drizzle"]},
+        "mobile-stack": {"lines": [121, 160], "tokens": 350, "tags": ["expo", "mobile"]},
+        "project-structure": {"lines": [161, 230], "tokens": 500, "tags": ["structure", "folders"]},
+        "code-patterns": {"lines": [231, 345], "tokens": 600, "tags": ["patterns", "typescript"]},
+        "database": {"lines": [346, 388], "tokens": 300, "tags": ["drizzle", "postgres"]},
+        "deployment": {"lines": [389, 415], "tokens": 250, "tags": ["vercel", "deploy"]}
+      },
+      "tags": ["typescript", "react", "trpc", "drizzle", "vercel", "expo"]
+    },
+
+    "swarm-orchestration-guide.md": {
+      "path": "/root/.claude/knowledge/swarm-orchestration-guide.md",
+      "totalTokens": 3000,
+      "sections": {
+        "agent-catalog": {"lines": [8, 52], "tokens": 400, "tags": ["agents", "types"]},
+        "topologies": {"lines": [54, 130], "tokens": 500, "tags": ["hierarchical", "mesh", "star"]},
+        "deployment-patterns": {"lines": [132, 220], "tokens": 700, "tags": ["patterns", "swarm"]},
+        "memory-coordination": {"lines": [220, 260], "tokens": 300, "tags": ["memory", "coordination"]},
+        "decision-matrix": {"lines": [262, 300], "tokens": 300, "tags": ["decisions", "when-to-use"]}
+      },
+      "tags": ["multi-agent", "swarm", "orchestration", "coordination"]
+    },
+
+    "marketing-orchestrator.md": {
+      "path": "/root/.claude/knowledge/marketing-orchestrator.md",
+      "totalTokens": 2000,
+      "sections": {
+        "sub-agents": {"lines": [10, 50], "tokens": 400, "tags": ["agents", "marketing"]},
+        "workflows": {"lines": [52, 120], "tokens": 500, "tags": ["campaigns", "workflows"]},
+        "client-research": {"lines": [122, 180], "tokens": 400, "tags": ["research", "clients"]}
+      },
+      "tags": ["marketing", "campaign", "content", "ads"]
+    },
+
+    "mcp-patterns.md": {
+      "path": "/root/.claude/knowledge/mcp-patterns.md",
+      "totalTokens": 600,
+      "sections": {
+        "patterns": {"lines": [1, 50], "tokens": 300, "tags": ["mcp", "integration"]},
+        "examples": {"lines": [51, 100], "tokens": 300, "tags": ["examples", "api"]}
+      },
+      "tags": ["mcp", "integration", "api"]
+    },
+
+    "script-writer.md": {
+      "path": "/root/.claude/knowledge/script-writer.md",
+      "totalTokens": 2500,
+      "sections": {
+        "overview": {"lines": [1, 30], "tokens": 200, "tags": ["scripts", "video"]},
+        "sub-agents": {"lines": [31, 80], "tokens": 400, "tags": ["agents"]},
+        "templates": {"lines": [81, 150], "tokens": 500, "tags": ["templates", "format"]}
+      },
+      "tags": ["scripts", "video", "social", "content"]
+    }
+  },
+
+  "tagIndex": {
+    "typescript": ["julian-stack.md"],
+    "react": ["julian-stack.md"],
+    "trpc": ["julian-stack.md"],
+    "drizzle": ["julian-stack.md"],
+    "multi-agent": ["swarm-orchestration-guide.md"],
+    "swarm": ["swarm-orchestration-guide.md"],
+    "marketing": ["marketing-orchestrator.md"],
+    "mcp": ["mcp-patterns.md"],
+    "integration": ["mcp-patterns.md"],
+    "scripts": ["script-writer.md"]
+  }
+}

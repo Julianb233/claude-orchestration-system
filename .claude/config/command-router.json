@@ -1,0 +1,114 @@
+{
+  "version": "1.1",
+  "description": "Routes slash commands to workflows, agents, and actions",
+  "lastUpdated": "2025-12-25",
+
+  "shortcuts": {
+    "navigation": {
+      "/n": {"action": "show-next-actions", "workflow": "workflows/proactive-actions.md"},
+      "/h": {"action": "show-history", "workflow": "workflows/history-tracking.md"},
+      "/c": {"action": "load-context", "workflow": "workflows/session-startup.md"},
+      "/s": {"action": "check-sync", "workflow": "workflows/file-sync.md"}
+    },
+    "git": {
+      "/g": {"action": "git-smart", "subcommands": ["commit", "pr", "branch", "sync"]},
+      "/g commit": {"action": "smart-commit", "autoMessage": true},
+      "/g pr": {"action": "create-pr", "autoDescription": true},
+      "/g branch": {"action": "create-branch", "autoName": true},
+      "/g sync": {"action": "fetch-rebase"},
+      "/p": {"action": "git-push"},
+      "/st": {"action": "git-status"}
+    },
+    "quality": {
+      "/r": {"action": "code-review", "agent": "Rex-Reviewer"},
+      "/t": {"action": "test-watch", "workflow": "workflows/proactive-actions.md"},
+      "/ok": {"action": "all-checks", "sequence": ["lint", "types", "test", "build"]},
+      "/fix": {"action": "auto-fix-lint"}
+    },
+    "deploy": {
+      "/b": {"action": "build"},
+      "/d": {"action": "deploy"},
+      "/done": {"action": "ship-it", "sequence": ["commit", "push", "pr"]}
+    },
+    "agents": {
+      "/dev": {"agent": "app-development-agent", "alias": "/app-dev"},
+      "/hygiene": {"agent": "data-hygiene-agent", "alias": "/data-hygiene"},
+      "/mkt": {"agent": "marketing-orchestrator", "alias": "/marketing-orchestrator"},
+      "/integrate": {"agent": "mcp-factory", "alias": "/mcp-factory"},
+      "/sw": {"agent": "script-writer", "alias": "/script"},
+      "/sm": {"agent": "social-media-agent", "alias": "/social"},
+      "/victor": {"agent": "victor-videolearner", "description": "YouTube skill extraction", "patterns": ["learn from", "extract skills", "process video"]},
+      "/night-shift": {"action": "night-shift-mode", "workflow": "workflows/night-shift.md", "alias": "/sleep"},
+      "/sleep": {"action": "night-shift-mode", "workflow": "workflows/night-shift.md"}
+    },
+    "hive": {
+      "/cf-hive-start": {"action": "hive-start", "script": "/root/scripts/claude-hive.sh start"},
+      "/cf-hive-status": {"action": "hive-status", "script": "/root/scripts/claude-hive.sh status"},
+      "/cf-hive-stop": {"action": "hive-stop", "script": "/root/scripts/claude-hive.sh stop"},
+      "/cf-hive-add": {"action": "hive-add", "script": "/root/scripts/claude-hive.sh add"}
+    },
+    "memory": {
+      "/cf-memory": {"action": "memory-reference"},
+      "/cf-history": {"action": "show-history", "workflow": "workflows/history-tracking.md"},
+      "/cf-checkpoint": {"action": "save-checkpoint", "workflow": "workflows/recovery-protocol.md"},
+      "/cf-recover": {"action": "recover-checkpoint", "workflow": "workflows/recovery-protocol.md"},
+      "/cf-optimize": {"action": "show-optimization-status"}
+    },
+    "validation": {
+      "/v": {"action": "e2e-validate", "alias": "/validate"},
+      "/validate": {"action": "e2e-validate", "agent": "e2e-tester"},
+      "/test": {"action": "e2e-validate", "alias": "/validate"}
+    },
+    "workforce": {
+      "/workforce-spawn": {"action": "spawn-workforce-agent", "command": "commands/workforce-spawn.md"},
+      "/workforce-status": {"action": "show-workforce-status", "command": "commands/workforce-status.md"},
+      "/workforce-check": {"action": "workforce-health-check", "command": "commands/workforce-check.md"},
+      "/workforce-reassign": {"action": "reassign-agent-task", "command": "commands/workforce-reassign.md"}
+    }
+  },
+
+  "namedAgentRouting": {
+    "pattern": "mentions:{agentName}",
+    "action": "spawn-named-agent",
+    "lookupRegistry": "/root/.claude/agents/_registry.md",
+    "configFile": "/root/.claude-flow/agent-coordination/named-agents.json"
+  },
+
+  "taskRouting": {
+    "typescript": {"keywords": ["ts", "typescript", "javascript", "js", "node"], "agent": "Tyler-TypeScript"},
+    "review": {"keywords": ["review", "check", "validate code"], "agent": "Rex-Reviewer"},
+    "debug": {"keywords": ["debug", "fix bug", "investigate", "error"], "agent": "Diana-Debugger"},
+    "architect": {"keywords": ["design", "architect", "structure", "plan system"], "agent": "Archie-Architect"},
+    "test": {"keywords": ["test", "testing", "coverage", "spec"], "agent": "Tessa-Tester"},
+    "deploy": {"keywords": ["deploy", "release", "production", "ci/cd"], "agent": "Petra-DevOps"},
+    "memory": {"keywords": ["remember", "recall", "context", "history"], "agent": "Helena-Memory"},
+    "security": {"keywords": ["security", "vulnerability", "audit", "pentest"], "agent": "Sage-Security"},
+    "monitor": {"keywords": ["monitor", "observability", "metrics", "alerts"], "agent": "Otto-Observer"},
+    "python": {"keywords": ["python", "py", "django", "flask"], "agent": "Peter-Python"},
+    "database": {"keywords": ["database", "schema", "sql", "migration"], "agent": "Dana-Database"},
+    "frontend": {"keywords": ["frontend", "ui", "react", "component"], "agent": "Fiona-Frontend"},
+    "api": {"keywords": ["api", "openapi", "swagger", "documentation"], "agent": "Adam-API"},
+    "kubernetes": {"keywords": ["kubernetes", "k8s", "docker", "container"], "agent": "Kirk-Kubernetes"},
+    "marketing": {"keywords": ["marketing", "campaign", "ad", "funnel"], "agent": "Morgan-Marketing"},
+    "social": {"keywords": ["social media", "post", "linkedin", "twitter"], "agent": "Sophie-Social"},
+    "script": {"keywords": ["script", "video script", "ad script"], "agent": "Scarlett-Script"},
+    "guide": {"keywords": ["guide", "tutorial", "how-to", "documentation"], "agent": "Gina-Guide"},
+    "brand": {"keywords": ["brand", "branding", "style guide", "identity"], "agent": "Bella-Branding"},
+    "orchestrate": {"keywords": ["orchestrate", "coordinate", "multi-agent", "swarm"], "agent": "Marcus-Orchestrator"},
+    "youtube": {"keywords": ["youtube", "video", "transcript", "learn from video", "skill from video"], "agent": "Victor-VideoLearner"}
+  },
+
+  "workflowTriggers": {
+    "session-start": "workflows/session-startup.md",
+    "in-project": "workflows/state-management.md",
+    "multi-agent": "workflows/recovery-protocol.md",
+    "action-complete": "workflows/proactive-actions.md",
+    "file-change": "workflows/file-sync.md",
+    "hive-command": "workflows/hive-coordination.md"
+  },
+
+  "fallback": {
+    "unknownCommand": "Show available commands from this router",
+    "noAgentMatch": "Use general-purpose agent"
+  }
+}

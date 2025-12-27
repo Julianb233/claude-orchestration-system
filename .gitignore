@@ -1,0 +1,76 @@
+# ==================================
+# Credentials and Secrets (CRITICAL)
+# ==================================
+.credentials.json
+api-keys.json
+environment-keys.sh
+**/test-credentials.json
+**/client-integration-config.json
+**/*.key
+**/*.pem
+**/.env
+**/.env.*
+
+# ==================================
+# Session and Runtime Data
+# ==================================
+history.jsonl
+stats-cache.json
+settings.local.json
+
+# Session directories
+session-notes/
+session-env/
+debug/
+file-history/
+shell-snapshots/
+statsig/
+telemetry/
+todos/
+projects/
+plans/
+plugins/
+
+# ==================================
+# Claude Flow Runtime
+# ==================================
+.claude-flow/workers/
+.claude-flow/hive/status.json
+.claude-flow/test-results/
+.claude-flow/logs/
+.claude-flow/metrics/
+.claude-flow/AUTONOMOUS_WORKER_REPORT_*.md
+.claude-flow/task-queue.txt
+.claude-flow/file-relations.json
+.claude-flow/project-urls.json
+.claude-flow/recovery/active-tasks.json
+.claude-flow/recovery/workflow-state.json
+.claude-flow/history/
+
+# ==================================
+# Node Modules and Dependencies
+# ==================================
+**/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ==================================
+# OS and Editor Files
+# ==================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# ==================================
+# Build and Cache
+# ==================================
+dist/
+build/
+*.log
+*.pid

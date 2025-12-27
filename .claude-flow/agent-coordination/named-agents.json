@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "description": "Named agent coordination configuration",
+
+  "namingConvention": {
+    "format": "{PersonName}-{Role}",
+    "examples": ["Marcus-Orchestrator", "Tyler-TypeScript", "Rex-Reviewer"]
+  },
+
+  "registry": {
+    "tier1_core": [
+      {"name": "Marcus-Orchestrator", "role": "Multi-agent coordination", "agent": "workflow-orchestrator", "rank": 1},
+      {"name": "Tyler-TypeScript", "role": "TS/JS development", "agent": "typescript-pro", "rank": 2},
+      {"name": "Rex-Reviewer", "role": "Code review", "agent": "code-reviewer", "rank": 3},
+      {"name": "Diana-Debugger", "role": "Bug investigation", "agent": "debugger", "rank": 4},
+      {"name": "Archie-Architect", "role": "System design", "agent": "backend-architect", "rank": 5}
+    ],
+    "tier2_quality": [
+      {"name": "Tessa-Tester", "role": "Test automation", "agent": "test-automator", "rank": 6},
+      {"name": "Petra-DevOps", "role": "Deployment", "agent": "deployment-engineer", "rank": 7},
+      {"name": "Helena-Memory", "role": "Context/history", "agent": "context-manager", "rank": 8},
+      {"name": "Sage-Security", "role": "Security audits", "agent": "security-auditor", "rank": 9},
+      {"name": "Otto-Observer", "role": "Monitoring", "agent": "observability-engineer", "rank": 10}
+    ],
+    "tier3_specialized": [
+      {"name": "Peter-Python", "role": "Python development", "agent": "python-pro", "rank": 11},
+      {"name": "Dana-Database", "role": "Data modeling", "agent": "database-architect", "rank": 12},
+      {"name": "Fiona-Frontend", "role": "UI development", "agent": "frontend-developer", "rank": 13},
+      {"name": "Adam-API", "role": "API documentation", "agent": "api-documenter", "rank": 14},
+      {"name": "Kirk-Kubernetes", "role": "Container orchestration", "agent": "kubernetes-architect", "rank": 15}
+    ],
+    "tier4_business": [
+      {"name": "Morgan-Marketing", "role": "Campaigns", "agent": "marketing-orchestrator", "rank": 16},
+      {"name": "Sophie-Social", "role": "Social content", "agent": "social-media-agent", "rank": 17},
+      {"name": "Scarlett-Script", "role": "Video scripts", "agent": "script-writer", "rank": 18},
+      {"name": "Gina-Guide", "role": "Documentation", "agent": "how-to-guide-agent", "rank": 19},
+      {"name": "Bella-Branding", "role": "Brand consistency", "agent": "branding-agent", "rank": 20}
+    ]
+  },
+
+  "aliases": {
+    "Marcus": "Marcus-Orchestrator",
+    "Tyler": "Tyler-TypeScript",
+    "Rex": "Rex-Reviewer",
+    "Diana": "Diana-Debugger",
+    "Archie": "Archie-Architect",
+    "Tessa": "Tessa-Tester",
+    "Petra": "Petra-DevOps",
+    "Helena": "Helena-Memory",
+    "Sage": "Sage-Security",
+    "Otto": "Otto-Observer",
+    "Peter": "Peter-Python",
+    "Dana": "Dana-Database",
+    "Fiona": "Fiona-Frontend",
+    "Adam": "Adam-API",
+    "Kirk": "Kirk-Kubernetes",
+    "Morgan": "Morgan-Marketing",
+    "Sophie": "Sophie-Social",
+    "Scarlett": "Scarlett-Script",
+    "Gina": "Gina-Guide",
+    "Bella": "Bella-Branding"
+  },
+
+  "roleAliases": {
+    "orchestrator": "Marcus-Orchestrator",
+    "coordinator": "Marcus-Orchestrator",
+    "coder": "Tyler-TypeScript",
+    "typescript": "Tyler-TypeScript",
+    "reviewer": "Rex-Reviewer",
+    "debugger": "Diana-Debugger",
+    "architect": "Archie-Architect",
+    "tester": "Tessa-Tester",
+    "devops": "Petra-DevOps",
+    "deployer": "Petra-DevOps",
+    "memory": "Helena-Memory",
+    "security": "Sage-Security",
+    "monitoring": "Otto-Observer",
+    "python": "Peter-Python",
+    "database": "Dana-Database",
+    "frontend": "Fiona-Frontend",
+    "api": "Adam-API",
+    "kubernetes": "Kirk-Kubernetes",
+    "marketing": "Morgan-Marketing",
+    "social": "Sophie-Social",
+    "scripts": "Scarlett-Script",
+    "docs": "Gina-Guide",
+    "branding": "Bella-Branding"
+  },
+
+  "memoryNamespaces": {
+    "registry": {"namespace": "agent-registry", "ttl": "session"},
+    "status": {"namespace": "agent-status", "ttl": 300},
+    "broadcast": {"namespace": "agent-broadcast", "ttl": 3600},
+    "locks": {"namespace": "file-locks", "ttl": 1800}
+  },
+
+  "queryPatterns": {
+    "status": ["what is {agent} working on", "status of {agent}", "what's {agent} doing"],
+    "availability": ["is {agent} available", "is {agent} free", "can {agent} help"],
+    "find": ["who can help with {topic}", "find agent for {topic}", "which agent handles {topic}"],
+    "list": ["show agents", "list agents", "active agents", "who's working"]
+  },
+
+  "heartbeatConfig": {
+    "interval": 30,
+    "staleThreshold": 300,
+    "offlineThreshold": 900
+  }
+}

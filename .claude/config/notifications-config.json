@@ -1,0 +1,225 @@
+{
+  "version": "2.0",
+  "defaultRecipient": "julian@aiacrobatics.com",
+
+  "channels": {
+    "email": {
+      "enabled": true,
+      "service": "mailgun",
+      "domain": "aiacrobatics.com",
+      "sender": "bubba@aiacrobatics.com",
+      "senderName": "Bubba Orchestrator",
+      "credentialKey": "Mailgun API key"
+    },
+    "slack": {
+      "enabled": true,
+      "webhookUrl": "${SLACK_WEBHOOK_URL}",
+      "channel": "#bubba-updates",
+      "username": "Bubba",
+      "iconEmoji": ":robot_face:",
+      "credentialKey": "Slack webhook URL"
+    },
+    "sms": {
+      "enabled": true,
+      "service": "twilio",
+      "from": "${TWILIO_PHONE_NUMBER}",
+      "to": "${JULIAN_PHONE_NUMBER}",
+      "credentialKeys": {
+        "accountSid": "Twilio Account SID",
+        "authToken": "Twilio Auth Token",
+        "phoneNumber": "Twilio Phone Number"
+      }
+    },
+    "dashboard": {
+      "enabled": true,
+      "url": "https://bubba.aiacrobatics.com",
+      "wsEndpoint": "wss://bubba.aiacrobatics.com/ws"
+    }
+  },
+
+  "routing": {
+    "swarm_started": {
+      "email": true,
+      "slack": true,
+      "sms": false,
+      "dashboard": true,
+      "priority": "normal"
+    },
+    "phase_complete": {
+      "email": false,
+      "slack": true,
+      "sms": false,
+      "dashboard": true,
+      "priority": "normal"
+    },
+    "agent_progress": {
+      "email": false,
+      "slack": "thread",
+      "sms": false,
+      "dashboard": true,
+      "priority": "low"
+    },
+    "blocker_hit": {
+      "email": true,
+      "slack": true,
+      "sms": true,
+      "dashboard": true,
+      "priority": "high"
+    },
+    "critical_error": {
+      "email": true,
+      "slack": true,
+      "sms": true,
+      "dashboard": true,
+      "priority": "critical"
+    },
+    "swarm_completed": {
+      "email": true,
+      "slack": true,
+      "sms": false,
+      "dashboard": true,
+      "priority": "normal"
+    },
+    "quality_gate_passed": {
+      "email": false,
+      "slack": true,
+      "sms": false,
+      "dashboard": true,
+      "priority": "normal"
+    },
+    "quality_gate_failed": {
+      "email": true,
+      "slack": true,
+      "sms": true,
+      "dashboard": true,
+      "priority": "high"
+    },
+    "client_update": {
+      "email": true,
+      "slack": false,
+      "sms": false,
+      "dashboard": true,
+      "priority": "normal",
+      "useClientConfig": true
+    }
+  },
+
+  "templates": {
+    "swarm_started": {
+      "email": {
+        "subject": "[Bubba] Started: {{task_name}}",
+        "body": "Hey Julian,\n\nI'm on it.\n\n{{plan_summary}}\n\nAgents: {{agents}}\nPhases: {{phases}}\n\nWatch live: {{dashboard_url}}\n\n- Bubba"
+      },
+      "slack": {
+        "text": ":rocket: *Swarm Started*",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {"type": "plain_text", "text": "{{task_name}}"}
+          },
+          {
+            "type": "section",
+            "fields": [
+              {"type": "mrkdwn", "text": "*Agents:* {{agent_count}}"},
+              {"type": "mrkdwn", "text": "*Phases:* {{phase_count}}"}
+            ]
+          },
+          {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": "{{plan_summary}}"}
+          },
+          {
+            "type": "actions",
+            "elements": [
+              {"type": "button", "text": {"type": "plain_text", "text": "View Dashboard"}, "url": "{{dashboard_url}}"}
+            ]
+          }
+        ]
+      },
+      "sms": "Bubba started: {{task_name}}. {{agent_count}} agents deployed."
+    },
+    "phase_complete": {
+      "slack": {
+        "text": ":white_check_mark: Phase {{phase_number}} complete: {{phase_name}}",
+        "thread_ts": "{{swarm_thread_ts}}"
+      }
+    },
+    "agent_progress": {
+      "slack": {
+        "text": ":gear: {{agent_name}}: {{status}} - {{task}}",
+        "thread_ts": "{{swarm_thread_ts}}"
+      }
+    },
+    "blocker_hit": {
+      "email": {
+        "subject": "[Bubba] BLOCKED: {{task_name}}",
+        "body": "Hey Julian,\n\nWe hit a snag.\n\nBlocker: {{blocker_description}}\nAgent: {{agent_name}}\nWaiting on: {{dependency}}\n\nI'll keep trying. Check dashboard: {{dashboard_url}}\n\n- Bubba"
+      },
+      "slack": {
+        "text": ":warning: *Blocker Hit*\n{{blocker_description}}\nAgent: {{agent_name}}"
+      },
+      "sms": "Bubba BLOCKED: {{blocker_description}}"
+    },
+    "critical_error": {
+      "email": {
+        "subject": "[Bubba] ALERT: {{error_type}}",
+        "body": "Hey Julian,\n\nCritical error!\n\nError: {{error_message}}\nAgent: {{agent_name}}\nContext: {{context}}\n\nRecovery: {{recovery_options}}\n\nNeed your input.\n\n- Bubba"
+      },
+      "slack": {
+        "text": ":x: *CRITICAL ERROR*\n```{{error_message}}```\nAgent: {{agent_name}}"
+      },
+      "sms": "BUBBA CRITICAL: {{error_type}} - {{error_message}}"
+    },
+    "swarm_completed": {
+      "email": {
+        "subject": "[Bubba] Completed: {{task_name}}",
+        "body": "Hey Julian,\n\nAll done!\n\nResults:\n{{summary}}\n\nTime: {{duration}}\nFiles changed: {{files_count}}\nAgents used: {{agents}}\n\nFull report: {{dashboard_url}}\n\n- Bubba"
+      },
+      "slack": {
+        "text": ":tada: *Swarm Completed*",
+        "blocks": [
+          {
+            "type": "header",
+            "text": {"type": "plain_text", "text": "{{task_name}} - Complete!"}
+          },
+          {
+            "type": "section",
+            "fields": [
+              {"type": "mrkdwn", "text": "*Duration:* {{duration}}"},
+              {"type": "mrkdwn", "text": "*Files Changed:* {{files_count}}"}
+            ]
+          },
+          {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": "{{summary}}"}
+          }
+        ]
+      },
+      "sms": "Bubba DONE: {{task_name}} completed in {{duration}}"
+    },
+    "quality_gate_passed": {
+      "slack": {
+        "text": ":white_check_mark: Gate {{gate_name}} passed",
+        "thread_ts": "{{swarm_thread_ts}}"
+      }
+    },
+    "quality_gate_failed": {
+      "email": {
+        "subject": "[Bubba] Gate Failed: {{gate_name}}",
+        "body": "Hey Julian,\n\nQuality gate failed.\n\nGate: {{gate_name}}\nReason: {{failure_reason}}\n\nOptions:\n- Rollback to checkpoint\n- Fix and retry\n- Override (not recommended)\n\nDashboard: {{dashboard_url}}\n\n- Bubba"
+      },
+      "slack": {
+        "text": ":no_entry: *Quality Gate Failed*\nGate: {{gate_name}}\nReason: {{failure_reason}}"
+      },
+      "sms": "Bubba GATE FAILED: {{gate_name}}"
+    }
+  },
+
+  "quietHours": {
+    "enabled": false,
+    "start": "22:00",
+    "end": "08:00",
+    "timezone": "America/Los_Angeles",
+    "allowCritical": true
+  }
+}

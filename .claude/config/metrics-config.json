@@ -1,0 +1,243 @@
+{
+  "version": "1.0",
+  "description": "Performance metrics configuration for agent and system tracking",
+
+  "metrics": {
+    "agent": {
+      "taskCompletionTime": {
+        "description": "Time from task assignment to completion",
+        "unit": "seconds",
+        "aggregations": ["avg", "p50", "p95", "max"],
+        "alertThreshold": 600,
+        "namespace": "metrics",
+        "keyPattern": "agent-{name}-completion-time"
+      },
+      "successRate": {
+        "description": "Percentage of tasks completed without errors",
+        "unit": "percentage",
+        "aggregations": ["avg", "trend"],
+        "alertThreshold": 80,
+        "namespace": "metrics",
+        "keyPattern": "agent-{name}-success-rate"
+      },
+      "filesModified": {
+        "description": "Number of files modified per task",
+        "unit": "count",
+        "aggregations": ["avg", "max"],
+        "namespace": "metrics",
+        "keyPattern": "agent-{name}-files-modified"
+      },
+      "errorRate": {
+        "description": "Percentage of tasks that encountered errors",
+        "unit": "percentage",
+        "aggregations": ["avg", "trend"],
+        "alertThreshold": 20,
+        "namespace": "metrics",
+        "keyPattern": "agent-{name}-error-rate"
+      },
+      "heartbeatMisses": {
+        "description": "Number of missed heartbeat updates",
+        "unit": "count",
+        "aggregations": ["sum", "max"],
+        "alertThreshold": 3,
+        "namespace": "metrics",
+        "keyPattern": "agent-{name}-heartbeat-misses"
+      }
+    },
+
+    "swarm": {
+      "totalDuration": {
+        "description": "Time from swarm init to completion",
+        "unit": "seconds",
+        "aggregations": ["avg", "p95"],
+        "namespace": "metrics",
+        "keyPattern": "swarm-{id}-duration"
+      },
+      "agentUtilization": {
+        "description": "Percentage of time agents were active",
+        "unit": "percentage",
+        "aggregations": ["avg"],
+        "namespace": "metrics",
+        "keyPattern": "swarm-{id}-utilization"
+      },
+      "coordinationOverhead": {
+        "description": "Time spent in coordination vs execution",
+        "unit": "percentage",
+        "aggregations": ["avg"],
+        "alertThreshold": 30,
+        "namespace": "metrics",
+        "keyPattern": "swarm-{id}-overhead"
+      },
+      "taskThroughput": {
+        "description": "Tasks completed per hour",
+        "unit": "tasks/hour",
+        "aggregations": ["avg", "max"],
+        "namespace": "metrics",
+        "keyPattern": "swarm-{id}-throughput"
+      }
+    },
+
+    "system": {
+      "contextUsage": {
+        "description": "Current context window utilization",
+        "unit": "percentage",
+        "aggregations": ["current", "avg", "max"],
+        "alertThreshold": 80,
+        "namespace": "metrics",
+        "keyPattern": "system-context-usage"
+      },
+      "memoryOperations": {
+        "description": "Claude Flow memory operations per minute",
+        "unit": "ops/min",
+        "aggregations": ["avg", "max"],
+        "namespace": "metrics",
+        "keyPattern": "system-memory-ops"
+      },
+      "rateLimitHits": {
+        "description": "Number of rate limit encounters",
+        "unit": "count",
+        "aggregations": ["sum", "hourly"],
+        "alertThreshold": 5,
+        "namespace": "metrics",
+        "keyPattern": "system-rate-limits"
+      },
+      "recoveryEvents": {
+        "description": "Number of recovery operations triggered",
+        "unit": "count",
+        "aggregations": ["sum", "daily"],
+        "namespace": "metrics",
+        "keyPattern": "system-recoveries"
+      }
+    },
+
+    "task": {
+      "queueDepth": {
+        "description": "Number of tasks waiting in queue",
+        "unit": "count",
+        "aggregations": ["current", "avg", "max"],
+        "alertThreshold": 10,
+        "namespace": "metrics",
+        "keyPattern": "task-queue-depth"
+      },
+      "waitTime": {
+        "description": "Time tasks spend in queue before pickup",
+        "unit": "seconds",
+        "aggregations": ["avg", "p95"],
+        "alertThreshold": 120,
+        "namespace": "metrics",
+        "keyPattern": "task-wait-time"
+      },
+      "retryCount": {
+        "description": "Number of task retries",
+        "unit": "count",
+        "aggregations": ["sum", "avg"],
+        "alertThreshold": 3,
+        "namespace": "metrics",
+        "keyPattern": "task-retries"
+      }
+    }
+  },
+
+  "collection": {
+    "interval": 60,
+    "retention": {
+      "raw": 86400,
+      "hourly": 604800,
+      "daily": 2592000
+    },
+    "batchSize": 100
+  },
+
+  "alerts": {
+    "enabled": true,
+    "channels": ["memory", "log"],
+    "cooldown": 300,
+    "escalation": {
+      "warning": 1,
+      "critical": 3
+    }
+  },
+
+  "dashboards": {
+    "agent-performance": {
+      "title": "Agent Performance Dashboard",
+      "metrics": [
+        "agent.taskCompletionTime",
+        "agent.successRate",
+        "agent.errorRate"
+      ],
+      "refresh": 60
+    },
+    "swarm-health": {
+      "title": "Swarm Health Dashboard",
+      "metrics": [
+        "swarm.totalDuration",
+        "swarm.agentUtilization",
+        "swarm.coordinationOverhead"
+      ],
+      "refresh": 30
+    },
+    "system-overview": {
+      "title": "System Overview Dashboard",
+      "metrics": [
+        "system.contextUsage",
+        "system.rateLimitHits",
+        "task.queueDepth"
+      ],
+      "refresh": 60
+    }
+  },
+
+  "reporting": {
+    "daily": {
+      "enabled": true,
+      "time": "00:00",
+      "metrics": ["agent.successRate", "swarm.taskThroughput", "system.rateLimitHits"],
+      "destination": "metrics-daily-{date}"
+    },
+    "weekly": {
+      "enabled": true,
+      "day": "sunday",
+      "time": "00:00",
+      "metrics": "all",
+      "destination": "metrics-weekly-{week}"
+    }
+  },
+
+  "storage": {
+    "namespace": "metrics",
+    "keyPatterns": {
+      "current": "{metric}-current",
+      "history": "{metric}-history-{timestamp}",
+      "aggregate": "{metric}-{aggregation}-{period}"
+    },
+    "ttl": {
+      "current": 300,
+      "history": 86400,
+      "aggregate": 2592000
+    }
+  },
+
+  "agentBaselines": {
+    "Tyler-TypeScript": {
+      "avgCompletionTime": 300,
+      "expectedSuccessRate": 95
+    },
+    "Rex-Reviewer": {
+      "avgCompletionTime": 180,
+      "expectedSuccessRate": 98
+    },
+    "Diana-Debugger": {
+      "avgCompletionTime": 600,
+      "expectedSuccessRate": 85
+    },
+    "Tessa-Tester": {
+      "avgCompletionTime": 240,
+      "expectedSuccessRate": 92
+    },
+    "Petra-DevOps": {
+      "avgCompletionTime": 180,
+      "expectedSuccessRate": 96
+    }
+  }
+}

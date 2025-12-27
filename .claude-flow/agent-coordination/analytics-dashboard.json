@@ -1,0 +1,306 @@
+{
+  "version": "1.0",
+  "name": "Agent Performance Analytics Dashboard",
+  "description": "Configuration for real-time agent and swarm performance monitoring",
+  "lastUpdated": null,
+
+  "dashboards": {
+    "overview": {
+      "name": "Swarm Overview",
+      "refreshInterval": 30,
+      "widgets": [
+        {
+          "id": "active-agents",
+          "type": "gauge",
+          "title": "Active Agents",
+          "metric": "agents.active.count",
+          "thresholds": {"warning": 8, "critical": 10}
+        },
+        {
+          "id": "task-throughput",
+          "type": "timeseries",
+          "title": "Task Throughput",
+          "metric": "tasks.completed.rate",
+          "timeRange": "1h"
+        },
+        {
+          "id": "success-rate",
+          "type": "gauge",
+          "title": "Success Rate",
+          "metric": "tasks.success.rate",
+          "thresholds": {"warning": 0.85, "critical": 0.70}
+        },
+        {
+          "id": "queue-depth",
+          "type": "bar",
+          "title": "Task Queue Depth",
+          "metric": "tasks.pending.count"
+        }
+      ]
+    },
+    "agents": {
+      "name": "Agent Performance",
+      "refreshInterval": 60,
+      "widgets": [
+        {
+          "id": "agent-table",
+          "type": "table",
+          "title": "Agent Status",
+          "columns": ["id", "type", "status", "tasksCompleted", "errorRate", "avgResponseTime"]
+        },
+        {
+          "id": "agent-load",
+          "type": "heatmap",
+          "title": "Agent Load Distribution",
+          "metric": "agents.load"
+        },
+        {
+          "id": "capability-usage",
+          "type": "pie",
+          "title": "Capability Utilization",
+          "metric": "agents.capabilities.usage"
+        }
+      ]
+    },
+    "tasks": {
+      "name": "Task Analytics",
+      "refreshInterval": 30,
+      "widgets": [
+        {
+          "id": "task-status",
+          "type": "pie",
+          "title": "Task Status Distribution",
+          "metric": "tasks.status.distribution"
+        },
+        {
+          "id": "task-duration",
+          "type": "histogram",
+          "title": "Task Duration Distribution",
+          "metric": "tasks.duration"
+        },
+        {
+          "id": "task-types",
+          "type": "bar",
+          "title": "Tasks by Type",
+          "metric": "tasks.type.count"
+        },
+        {
+          "id": "bottlenecks",
+          "type": "table",
+          "title": "Current Bottlenecks",
+          "metric": "tasks.bottlenecks"
+        }
+      ]
+    },
+    "learning": {
+      "name": "Learning Analytics",
+      "refreshInterval": 300,
+      "widgets": [
+        {
+          "id": "patterns-learned",
+          "type": "counter",
+          "title": "Patterns Learned",
+          "metric": "learning.patterns.total"
+        },
+        {
+          "id": "knowledge-reuse",
+          "type": "timeseries",
+          "title": "Knowledge Reuse Rate",
+          "metric": "learning.reuse.rate"
+        },
+        {
+          "id": "model-accuracy",
+          "type": "gauge",
+          "title": "Neural Model Accuracy",
+          "metrics": ["coordination", "optimization", "prediction"]
+        },
+        {
+          "id": "improvement-trend",
+          "type": "timeseries",
+          "title": "Performance Improvement",
+          "metric": "learning.improvement.rate"
+        }
+      ]
+    },
+    "health": {
+      "name": "System Health",
+      "refreshInterval": 15,
+      "widgets": [
+        {
+          "id": "heartbeats",
+          "type": "status",
+          "title": "Agent Heartbeats",
+          "metric": "agents.heartbeat.status"
+        },
+        {
+          "id": "memory-usage",
+          "type": "gauge",
+          "title": "Memory Namespace Usage",
+          "metric": "memory.usage.percent",
+          "thresholds": {"warning": 75, "critical": 90}
+        },
+        {
+          "id": "error-rate",
+          "type": "timeseries",
+          "title": "Error Rate",
+          "metric": "system.errors.rate"
+        },
+        {
+          "id": "recovery-events",
+          "type": "list",
+          "title": "Recent Recovery Events",
+          "metric": "system.recovery.events"
+        }
+      ]
+    }
+  },
+
+  "metrics": {
+    "collection": {
+      "interval": 10,
+      "retention": {
+        "raw": 3600,
+        "aggregated_1m": 86400,
+        "aggregated_1h": 604800,
+        "aggregated_1d": 2592000
+      }
+    },
+    "definitions": {
+      "agents.active.count": {
+        "type": "gauge",
+        "description": "Number of active agents"
+      },
+      "agents.load": {
+        "type": "gauge",
+        "description": "Load per agent (0-1)"
+      },
+      "agents.heartbeat.status": {
+        "type": "status",
+        "description": "Heartbeat status per agent"
+      },
+      "agents.capabilities.usage": {
+        "type": "counter",
+        "description": "Usage count per capability"
+      },
+      "tasks.completed.rate": {
+        "type": "rate",
+        "description": "Tasks completed per minute"
+      },
+      "tasks.success.rate": {
+        "type": "gauge",
+        "description": "Success rate (0-1)"
+      },
+      "tasks.pending.count": {
+        "type": "gauge",
+        "description": "Tasks waiting in queue"
+      },
+      "tasks.duration": {
+        "type": "histogram",
+        "description": "Task duration in seconds",
+        "buckets": [30, 60, 120, 300, 600, 1800, 3600]
+      },
+      "tasks.status.distribution": {
+        "type": "distribution",
+        "description": "Distribution of task statuses"
+      },
+      "tasks.type.count": {
+        "type": "counter",
+        "description": "Count per task type"
+      },
+      "tasks.bottlenecks": {
+        "type": "list",
+        "description": "Current task bottlenecks"
+      },
+      "learning.patterns.total": {
+        "type": "counter",
+        "description": "Total patterns learned"
+      },
+      "learning.reuse.rate": {
+        "type": "rate",
+        "description": "Knowledge reuse rate"
+      },
+      "learning.improvement.rate": {
+        "type": "rate",
+        "description": "Performance improvement over time"
+      },
+      "memory.usage.percent": {
+        "type": "gauge",
+        "description": "Memory namespace utilization"
+      },
+      "system.errors.rate": {
+        "type": "rate",
+        "description": "System errors per minute"
+      },
+      "system.recovery.events": {
+        "type": "list",
+        "description": "Recent recovery events"
+      }
+    }
+  },
+
+  "alerts": {
+    "rules": [
+      {
+        "name": "high-error-rate",
+        "condition": "tasks.success.rate < 0.8",
+        "severity": "warning",
+        "message": "Task success rate below 80%",
+        "action": "investigate_failures"
+      },
+      {
+        "name": "critical-error-rate",
+        "condition": "tasks.success.rate < 0.6",
+        "severity": "critical",
+        "message": "Task success rate critically low",
+        "action": "pause_and_investigate"
+      },
+      {
+        "name": "agent-stale",
+        "condition": "agents.heartbeat.age > 120",
+        "severity": "warning",
+        "message": "Agent heartbeat stale",
+        "action": "check_agent_health"
+      },
+      {
+        "name": "queue-buildup",
+        "condition": "tasks.pending.count > 10",
+        "severity": "warning",
+        "message": "Task queue building up",
+        "action": "scale_up_agents"
+      },
+      {
+        "name": "memory-pressure",
+        "condition": "memory.usage.percent > 85",
+        "severity": "warning",
+        "message": "Memory usage high",
+        "action": "trigger_compression"
+      }
+    ],
+    "channels": {
+      "log": {"enabled": true},
+      "memory": {"enabled": true, "namespace": "alerts"},
+      "notification": {"enabled": true, "script": "/root/scripts/agent-notify.sh"}
+    }
+  },
+
+  "reporting": {
+    "scheduled": [
+      {
+        "name": "hourly-summary",
+        "schedule": "0 * * * *",
+        "format": "summary",
+        "destination": "memory:reports/hourly"
+      },
+      {
+        "name": "daily-report",
+        "schedule": "0 0 * * *",
+        "format": "detailed",
+        "destination": "memory:reports/daily"
+      }
+    ],
+    "onDemand": {
+      "formats": ["summary", "detailed", "json", "csv"],
+      "timeRanges": ["1h", "6h", "24h", "7d", "30d"]
+    }
+  }
+}

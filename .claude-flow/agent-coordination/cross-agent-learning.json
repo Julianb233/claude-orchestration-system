@@ -1,0 +1,233 @@
+{
+  "version": "1.0",
+  "name": "Cross-Agent Learning System",
+  "description": "Enables agents to learn from each other's experiences and improve collectively",
+  "lastUpdated": null,
+
+  "learningDomains": {
+    "taskExecution": {
+      "description": "Learning from successful task completions",
+      "dataCollected": [
+        "task_type",
+        "approach_taken",
+        "tools_used",
+        "time_to_completion",
+        "success_rate",
+        "error_patterns",
+        "recovery_strategies"
+      ],
+      "namespace": "learning/task-execution",
+      "ttl": 2592000
+    },
+    "problemSolving": {
+      "description": "Learning from debugging and investigation",
+      "dataCollected": [
+        "problem_type",
+        "diagnostic_steps",
+        "root_cause",
+        "solution_approach",
+        "verification_method"
+      ],
+      "namespace": "learning/problem-solving",
+      "ttl": 2592000
+    },
+    "codePatterns": {
+      "description": "Learning common code patterns and best practices",
+      "dataCollected": [
+        "language",
+        "framework",
+        "pattern_name",
+        "use_case",
+        "implementation",
+        "variations"
+      ],
+      "namespace": "learning/code-patterns",
+      "ttl": 7776000
+    },
+    "coordination": {
+      "description": "Learning effective collaboration strategies",
+      "dataCollected": [
+        "topology_used",
+        "team_size",
+        "task_complexity",
+        "communication_patterns",
+        "bottlenecks",
+        "resolution_strategies"
+      ],
+      "namespace": "learning/coordination",
+      "ttl": 2592000
+    },
+    "userPreferences": {
+      "description": "Learning user's preferred approaches and styles",
+      "dataCollected": [
+        "coding_style",
+        "documentation_level",
+        "testing_approach",
+        "communication_style",
+        "tool_preferences"
+      ],
+      "namespace": "learning/user-preferences",
+      "ttl": 7776000
+    }
+  },
+
+  "knowledgeSharing": {
+    "broadcastEvents": [
+      {
+        "event": "task_completed",
+        "share": ["approach", "learnings", "pitfalls"],
+        "audience": "all_agents"
+      },
+      {
+        "event": "error_resolved",
+        "share": ["error_type", "root_cause", "solution"],
+        "audience": "related_domain_agents"
+      },
+      {
+        "event": "pattern_discovered",
+        "share": ["pattern", "context", "benefits"],
+        "audience": "all_agents"
+      },
+      {
+        "event": "optimization_found",
+        "share": ["before", "after", "technique"],
+        "audience": "all_agents"
+      }
+    ],
+    "queryableKnowledge": {
+      "enabled": true,
+      "maxResults": 10,
+      "relevanceThreshold": 0.7
+    }
+  },
+
+  "experienceReplay": {
+    "enabled": true,
+    "bufferSize": 1000,
+    "sampleStrategy": "prioritized",
+    "priorityFactors": {
+      "recency": 0.3,
+      "success": 0.4,
+      "novelty": 0.2,
+      "relevance": 0.1
+    },
+    "replayFrequency": "on_similar_task"
+  },
+
+  "patternRecognition": {
+    "algorithms": {
+      "similarity_matching": {
+        "description": "Find similar past experiences",
+        "threshold": 0.8
+      },
+      "sequence_learning": {
+        "description": "Learn common task sequences",
+        "minSequenceLength": 3
+      },
+      "anomaly_detection": {
+        "description": "Detect unusual patterns",
+        "sensitivityLevel": 0.7
+      }
+    },
+    "updateFrequency": 3600
+  },
+
+  "collectiveLearning": {
+    "aggregationMethods": {
+      "consensus": {
+        "description": "Combine learnings from multiple agents",
+        "minContributors": 3,
+        "weightBySuccess": true
+      },
+      "ensemble": {
+        "description": "Use multiple approaches in parallel",
+        "selectionMethod": "best_performer"
+      },
+      "federated": {
+        "description": "Learn locally, share globally",
+        "syncInterval": 600
+      }
+    },
+    "conflictResolution": {
+      "strategy": "success_weighted_voting",
+      "tieBreaker": "most_recent"
+    }
+  },
+
+  "modelUpdates": {
+    "neuralModelIntegration": {
+      "coordination": {
+        "modelId": "coordination",
+        "updateTrigger": "100_new_experiences",
+        "learningRate": 0.01
+      },
+      "optimization": {
+        "modelId": "optimization",
+        "updateTrigger": "50_new_experiences",
+        "learningRate": 0.02
+      },
+      "prediction": {
+        "modelId": "prediction",
+        "updateTrigger": "200_new_experiences",
+        "learningRate": 0.005
+      }
+    }
+  },
+
+  "knowledgeDistillation": {
+    "enabled": true,
+    "process": [
+      "Collect experiences from all agents",
+      "Extract common patterns and insights",
+      "Validate against success metrics",
+      "Distill into actionable guidelines",
+      "Distribute to all agents"
+    ],
+    "outputFormats": [
+      {
+        "type": "best_practices",
+        "namespace": "knowledge/best-practices",
+        "format": "guidelines"
+      },
+      {
+        "type": "common_pitfalls",
+        "namespace": "knowledge/pitfalls",
+        "format": "warnings"
+      },
+      {
+        "type": "solution_templates",
+        "namespace": "knowledge/templates",
+        "format": "code_snippets"
+      }
+    ],
+    "distillationFrequency": 86400
+  },
+
+  "forgetting": {
+    "enabled": true,
+    "strategies": {
+      "time_decay": {
+        "description": "Older knowledge fades unless reinforced",
+        "halfLife": 604800
+      },
+      "success_retention": {
+        "description": "Successful patterns persist longer",
+        "successMultiplier": 2.0
+      },
+      "relevance_pruning": {
+        "description": "Remove irrelevant knowledge",
+        "threshold": 0.3
+      }
+    }
+  },
+
+  "metrics": {
+    "learningEffectiveness": [
+      "knowledge_reuse_rate",
+      "error_reduction_rate",
+      "time_improvement_rate",
+      "novel_solution_rate"
+    ],
+    "dashboardNamespace": "metrics/learning"
+  }
+}

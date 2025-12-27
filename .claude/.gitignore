@@ -1,0 +1,18 @@
+# Credentials and secrets
+.credentials.json
+api-keys.json
+environment-keys.sh
+config/test-credentials.json
+
+# Session/cache data
+history.jsonl
+stats-cache.json
+statsig/
+telemetry/
+debug/
+shell-snapshots/
+file-history/
+
+# Local settings
+settings.local.json
+session-notes/
