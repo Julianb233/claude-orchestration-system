@@ -79,3 +79,6 @@ build/
 .env
 .env.local
 .env.*.local
+.codex/
+.hermes/
+.env.production
